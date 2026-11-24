@@ -111,8 +111,10 @@ La `Guia_Aprendizaje_O2026_ESI3905O.docx` es **material externo del curso y no s
 
 ### Wiki publicada (8 páginas)
 
-Repositorio aparte `idc_proyecto.wiki.git`, rama `master`, commits `3e165ff` (Home creado por UI) y
-`17b6a30` (publicación). Contiene `Home.md` + 7 páginas `NN-*.md`, **3 diagramas Mermaid**
+Repositorio aparte `idc_proyecto.wiki.git`, rama `master`, **4 commits** de **2 autores** (orden cronológico):
+`3e165ff` (Home inicial, vía UI) · `17b6a30` (publicación inicial de las 8 páginas) ·
+`739580f` (`ur`: Home, 01, 02, 03) · `c3cbbda` (`Carlos Z`: 04, 05, 06, 07 — HEAD actual).
+Contiene `Home.md` + 7 páginas `NN-*.md`, **3 diagramas Mermaid**
 (classDiagram, flowchart TB, flowchart LR), **13 enlaces wiki** `[[NN|texto]]` y **4 enlaces absolutos** a
 `blob/main`. `has_wiki: true`.
 
@@ -292,7 +294,7 @@ git -C <repo> remote -v           # solo origin (SSH git@github.com:urielpinag/i
 git ls-remote https://github.com/urielpinag/idc_proyecto.wiki.git
 ```
 
-- [ ] `refs/heads/master` existe (publicación actual: `17b6a30`).
+- [ ] `refs/heads/master` existe (publicación actual: `c3cbbda`).
 - [ ] Abre https://github.com/urielpinag/idc_proyecto/wiki y cuenta **8 páginas**.
 - [ ] Los **3 diagramas Mermaid** renderizan: clases (02), infraestructura (04) y deployment (05).
 - [ ] Los **13 enlaces** `[[NN|texto]]` y los **4 enlaces absolutos** a `blob/main` resuelven.
