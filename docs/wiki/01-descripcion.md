@@ -2,7 +2,8 @@
 
 ## Problema
 
-La propuesta original de **TV Hub** parte de una necesidad cotidiana: muchas personas consumen canales de
+La propuesta original de **TV Hub** ([`../TV_Hub_Propuesta_Proyecto_Final.pdf`](../TV_Hub_Propuesta_Proyecto_Final.pdf))
+parte de una necesidad cotidiana: muchas personas consumen canales de
 televisión por internet (IPTV) mediante listas **M3U** sueltas, que se desordenan, duplican canales y
 dependen de enlaces que cambian o dejan de funcionar. No existe un lugar único para buscar canales por
 **nombre, país o categoría**, marcar **favoritos**, retomar la **reproducción** donde se dejó ni llevar un

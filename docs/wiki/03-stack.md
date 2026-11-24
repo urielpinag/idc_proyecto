@@ -51,7 +51,9 @@
 
 ### 5. Amazon DocumentDB en lugar de MongoDB en StatefulSet
 
-- La propuesta original montaba **MongoDB en un StatefulSet de minikube**; para el despliegue en la nube se
+- La propuesta original
+  ([`../TV_Hub_Propuesta_Proyecto_Final.pdf`](../TV_Hub_Propuesta_Proyecto_Final.pdf)) montaba **MongoDB en un
+  StatefulSet de minikube**; para el despliegue en la nube se
   usa un servicio gestionado: **backups, alta disponibilidad y parches** sin operar un StatefulSet.
 - DocumentDB se mantiene **fuera del clúster**, con un **Security Group** que solo acepta tráfico desde los
   nodos de EKS y credenciales en **Kubernetes Secrets**.
@@ -61,14 +63,17 @@
 
 ### 6. Docker Hub (no Amazon ECR)
 
-- La propuesta original ya publicaba en Docker Hub (`carloszatarain/tvhub-api`); se conserva.
+- La propuesta original
+  ([`../TV_Hub_Propuesta_Proyecto_Final.pdf`](../TV_Hub_Propuesta_Proyecto_Final.pdf)) ya publicaba en Docker Hub
+  (`carloszatarain/tvhub-api`); se conserva.
 - Las credenciales del usuario de Docker Hub se guardan como **GitHub Secrets** y EKS descarga las imágenes
   mediante `imagePullSecrets`.
 
 ## Compatibilidad DocumentDB ↔ Mongoose (importante)
 
 DocumentDB **imita** la API de MongoDB, pero está certificada para versiones antiguas (**~3.6 / 4.0** de la
-API de MongoDB), mientras que la propuesta usa **MongoDB 8 + Mongoose**.
+API de MongoDB), mientras que la propuesta
+([`../TV_Hub_Propuesta_Proyecto_Final.pdf`](../TV_Hub_Propuesta_Proyecto_Final.pdf)) usa **MongoDB 8 + Mongoose**.
 
 - **Riesgo:** operadores, índices, transacciones o agregaciones introducidas en MongoDB 5/6/7 no están
   soportadas; la versión del driver también es sensible a DocumentDB.

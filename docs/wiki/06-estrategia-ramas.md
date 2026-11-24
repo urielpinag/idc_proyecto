@@ -37,9 +37,11 @@ Reglas en **Settings → Branches → main**:
 2. Desarrollar con commits pequeños y mensaje claro.
 3. Abrir **PR** con [`../.github/pull_request_template.md`](../../.github/pull_request_template.md),
    describiendo el cambio y los criterios de aceptación.
-4. Se ejecuta el pipeline: build + pruebas + cobertura + imagen → **Dev**.
+4. Se ejecuta el pipeline del **PR**: build + pruebas unitarias + cobertura + construcción de la imagen
+   (**sin despliegue**).
 5. La otra persona **revisa y aprueba**.
-6. Merge a `main` (squash) → se elimina la rama.
+6. Merge a `main` (squash) → se elimina la rama. **Solo tras el merge** se despliega a **Dev** de forma
+   automática: build + pruebas unitarias + cobertura + imagen (nunca en el PR).
 7. Para **Prod**: aprobación manual del Environment `prod`.
 
 ## Convención de commits
@@ -59,7 +61,9 @@ Ejemplo: `feat(channels): agregar búsqueda por país y categoría`.
 
 ## Nota comparativa con GitFlow (propuesta original)
 
-La propuesta de **TV Hub** planteaba un **"GitFlow simplificado"** con ramas `main`, `develop`,
+La propuesta de **TV Hub**
+([`../TV_Hub_Propuesta_Proyecto_Final.pdf`](../TV_Hub_Propuesta_Proyecto_Final.pdf)) planteaba un
+**"GitFlow simplificado"** con ramas `main`, `develop`,
 `feature/<issue>-<desc>` y `hotfix/<desc>` (10 · Plan, p. 12). Se **simplifica aún más** a GitHub Flow con
 `main`, `feature/*`, `fix/*` e `infra/*` porque:
 
@@ -74,5 +78,6 @@ La propuesta de **TV Hub** planteaba un **"GitFlow simplificado"** con ramas `ma
 GitFlow completo (`release/*` prolongadas) tendría sentido con muchos desarrolladores y versiones en
 paralelo, escenario que no aplica aquí.
 
-> Detalle del PDF (p. 12) que difiere: el GitFlow de TV Hub nombraba `hotfix/<desc>` partiendo de `main`;
+> Detalle de [`../TV_Hub_Propuesta_Proyecto_Final.pdf`](../TV_Hub_Propuesta_Proyecto_Final.pdf) (p. 12) que
+> difiere: el GitFlow de TV Hub nombraba `hotfix/<desc>` partiendo de `main`;
 > aquí el equivalente es `fix/<issue>-<desc>` partiendo de `main`, para unificar el prefijo de correcciones.

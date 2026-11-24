@@ -5,22 +5,28 @@ mitigación y responsable.
 
 ## R1 · Rúbrica con "Azure Portal o CloudFlare" vs. AWS + CloudWatch
 
-- **Riesgo:** la rúbrica de la presentación menciona mostrar **recursos y métricas en Azure Portal o
-  CloudFlare**; con AWS los recursos y métricas se muestran en **CloudWatch / la consola de AWS**.
+- **Riesgo:** la rúbrica —**S13 "DevOps Summary", slide 16**, que pide mostrar los recursos en **"Azure Portal
+  o CloudFlare"**— menciona **recursos y métricas en Azure Portal o CloudFlare**; con AWS los recursos
+  y métricas se muestran en **CloudWatch / la consola de AWS**.
 - **Impacto:** medio — podría no aceptarse la evidencia de monitoreo.
-- **Mitigación:** **PENDIENTE DE CONFIRMAR CON EL PROFESOR**. Argumento: la guía de aprendizaje del curso
-  permite explícitamente **"AWS, Microsoft Azure u otro"** como plataforma de despliegue.
+- **Mitigación:** **PENDIENTE DE CONFIRMAR CON EL PROFESOR**. Argumento: la
+  **`Guia_Aprendizaje_O2026_ESI3905O.docx`** (material **externo al repo**, no versionado) permite
+  explícitamente **"AWS, Microsoft Azure u otro"** como plataforma de despliegue.
 - **Responsable:** Persona A (confirmación) · Persona B (registro en el reporte).
 
 ## R1b · Rúbrica nombra Prometheus/Grafana vs. AWS CloudWatch + X-Ray/ADOT
 
-- **Riesgo:** la rúbrica (S13) nombra **Prometheus/Grafana** para monitoreo y **APM**; el proyecto usa
-  **AWS CloudWatch** (métricas, logs, Container Insights) y **X-Ray/ADOT** (trazas). La sustitución no está
-  enumerada como aprobada.
+- **Riesgo:** la **`Guia_Aprendizaje_O2026_ESI3905O.docx`** (apartado de *tecnologías vistas* / PROYECTO)
+  nombra **Prometheus/Grafana** entre las tecnologías vistas en clase y **S13 "DevOps Summary" slide 16**
+  pide **"Monitoring | Logging | APM"**; el proyecto usa **AWS CloudWatch** (métricas, logs, Container
+  Insights) y **X-Ray/ADOT** (trazas). **S13 no nombra Prometheus/Grafana**: esa exigencia viene de la guía
+  DOCX. Ambas fuentes son **externas al repo** (diapositivas del curso y guía, no versionadas). La sustitución
+  no está enumerada como aprobada.
 - **Impacto:** bajo/medio — podría no aceptarse la evidencia de monitoreo/APM con la herramienta pedida.
 - **Mitigación:** **PENDIENTE DE CONFIRMAR CON EL PROFESOR**. Argumento: la guía de aprendizaje del curso
-  permite explícitamente **AWS** y nombra **Prometheus/Grafana** entre las tecnologías vistas en clase, que se
-  citan como base del stack; se explica la equivalencia funcional CloudWatch + X-Ray/ADOT.
+  (`Guia_Aprendizaje_O2026_ESI3905O.docx`) permite explícitamente **AWS** y nombra **Prometheus/Grafana** entre
+  las tecnologías vistas en clase, que se citan como base del stack; se explica la equivalencia funcional
+  CloudWatch + X-Ray/ADOT frente a "Monitoring | Logging | APM" de S13.
 - **Responsable:** Persona A (confirmación) · Persona B (registro en el reporte).
 
 ## R2 · Coste real de EKS y DocumentDB
@@ -35,8 +41,10 @@ mitigación y responsable.
 
 ## R3 · Compatibilidad DocumentDB ↔ MongoDB 8 + Mongoose
 
-- **Riesgo:** DocumentDB es compatible con la API de **MongoDB ~3.6/4.0**; la propuesta usa **MongoDB 8 +
-  Mongoose**. Operadores, índices o transacciones recientes pueden no existir.
+- **Riesgo:** la propuesta
+  ([`../TV_Hub_Propuesta_Proyecto_Final.pdf`](../TV_Hub_Propuesta_Proyecto_Final.pdf)) usa **MongoDB 8 +
+  Mongoose**, mientras que DocumentDB es compatible con la API de **MongoDB ~3.6/4.0**; operadores, índices o
+  transacciones recientes pueden no existir.
 - **Impacto:** alto — la app podría no arrancar o fallar en consultas.
 - **Mitigación:** fijar versiones del driver/Mongoose compatibles, evitar operadores fuera de 4.0 y
   **validar conectividad + CRUD + sync M3U en Dev** antes de fijar el stack (`TVH-29`).

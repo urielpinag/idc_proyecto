@@ -4,8 +4,9 @@
 
 - **Monorepo** en GitHub con tres carpetas: `/backend`, `/frontend`, `/infra`.
 - Cada cambio entra por una **rama corta** (`feature/*`, `fix/*`, `infra/*`) y un **Pull Request** revisado.
-- Al integrar en `main`, **GitHub Actions** construye, prueba, publica la imagen en **Docker Hub** y despliega
-  en **Dev**.
+- **Dev** se despliega **solo tras el merge a `main`** (no en el PR): **GitHub Actions** construye, ejecuta
+  las **pruebas unitarias** con **cobertura ≥ 80%**, publica la imagen en **Docker Hub** y despliega en **Dev**
+  de forma **automática**.
 - El paso a **Prod** requiere **aprobación manual** (*required reviewers* del GitHub Environment `prod`).
 - El **backlog** vive en **GitHub Projects** y los cambios se enlazan a issues.
 
@@ -67,7 +68,7 @@ flowchart LR
         approve["Required reviewers<br/>aprobación manual"]
     end
 
-    pr --> actions
+    main -->|merge a main| actions
     build --> test
     test --> art
     test -->|pasa| img
@@ -80,14 +81,13 @@ flowchart LR
 
     devns --> obs["CloudWatch / X-Ray<br/>logs · trazas · métricas"]
     prodns --> obs
-    main -.-> actions
 ```
 
 ## Ambientes
 
 | Ambiente | Namespace | Despliegue | URL |
 |----------|-----------|------------|-----|
-| **Dev** | `dev` | Automático en cada PR/push a `main` | URL del ALB de Dev |
+| **Dev** | `dev` | Automático **tras el merge a `main`** (build + pruebas unitarias + cobertura → Dev) | URL del ALB de Dev |
 | **Prod** | `prod` | Tras aprobación de *required reviewers* | URL del ALB de Prod |
 
 ## Notas de seguridad

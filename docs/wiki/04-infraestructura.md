@@ -119,7 +119,7 @@ flowchart TB
 
 | Ambiente | Namespace EKS | Ingreso | Aprobación |
 |----------|---------------|---------|------------|
-| **Dev** | `dev` | URL pública (ALB) de Dev | Automático en push/PR |
+| **Dev** | `dev` | URL pública (ALB) de Dev | **Automático tras el merge a `main`** |
 | **Prod** | `prod` | URL pública (ALB) de Prod | **Required reviewers** + aprobación manual |
 
 ## Siguientes pasos
