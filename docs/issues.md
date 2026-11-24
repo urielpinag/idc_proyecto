@@ -116,6 +116,12 @@ Desglose de issues por épica. Cada issue incluye **ID**, título, épica, descr
 - [ ] La Wiki documenta ramas, PR y convención de commits
 - [ ] Se abre un PR de prueba (feature/*) y se mergea con revisión
 
+**Criterios añadidos (Bloque B):**
+
+- [ ] La protección exige **PR + 1 aprobación de la otra persona** (nunca del autor)
+- [ ] **No** se exigen status checks todavía (aún no hay CI configurado)
+- [ ] **Cada PR lo revisa la otra persona** antes del merge
+
 ### TVH-03 · Plantilla de Pull Request y convención de commits
 
 - **ID:** `TVH-03`
@@ -986,6 +992,12 @@ Desglose de issues por épica. Cada issue incluye **ID**, título, épica, descr
 - [ ] Se ven las pruebas unitarias y el proyecto en Dev
 - [ ] Se aprueba a Prod y se ve el cambio en la URL pública
 
+**Criterios añadidos (Bloque B):**
+
+- [ ] Hay **capturas o grabación de respaldo** del resultado de las pruebas unitarias
+- [ ] Hay **capturas de respaldo** del proyecto publicado en Dev, de la aprobación a Prod y del cambio visible en la **URL pública**
+- [ ] El ensayo **usa el mapa de cobertura actualizado** de la rúbrica
+
 ### TVH-46 · Redactar el reporte final y la distribución de actividades
 
 - **ID:** `TVH-46`
@@ -1004,6 +1016,12 @@ Desglose de issues por épica. Cada issue incluye **ID**, título, épica, descr
 - [ ] Incluye distribución de actividades
 - [ ] Incluye conclusiones y mejoras pendientes
 - [ ] Referencia la Wiki y los diagramas Mermaid
+
+**Criterios añadidos (Bloque B):**
+
+- [ ] El reporte incluye **el mapa de cobertura de la rúbrica con el paso 🟡→✅** de cada punto implementado
+- [ ] El reporte incluye la **distribución de actividades** (A=`ur`, B=`Carlos Z`)
+- [ ] El reporte incluye conclusiones y mejoras pendientes (guía DOCX)
 
 ### TVH-47 · Presentación final con cambios, métricas y demo en vivo
 
@@ -1024,3 +1042,7 @@ Desglose de issues por épica. Cada issue incluye **ID**, título, épica, descr
 - [ ] Se ejecuta el cambio → PR → pipeline Dev → aprobación → Prod
 - [ ] Se muestran trazas, errores y métricas CPU/memoria/requests
 
+**Criterios añadidos (Bloque B):**
+
+- [ ] **Cada persona explica oralmente el código que implementó** (guía DOCX: «poder explicar el código»)
+- [ ] Se usan las **capturas de respaldo** si falla la red durante la demo
