@@ -7,7 +7,9 @@ name: Backend Deploy Dev
 # repositorio), de modo que el workflow se puede mergear antes de que existan
 # el clúster EKS, Docker Hub o el rol OIDC sin hacer fallar los builds.
 #
-# Nunca despliega a Prod: este workflow es exclusivamente del entorno Dev.
+# Además, el job `deploy-prod` promueve la misma imagen (sin rebuild) a Prod
+# solo cuando Dev termina con éxito y la variable `PROD_DEPLOY_ENABLED` está en
+# 'true' (aprobación manual del environment `prod`).
 
 on:
   workflow_run:
@@ -142,6 +144,132 @@ jobs:
 
           BASE="http://${HOST}"
           echo "URL pública (Dev): ${BASE}"
+
+          for path in /health /ready; do
+            ok="false"
+            for attempt in $(seq 1 30); do
+              code="$(curl -s -o /dev/null -w '%{http_code}' "${BASE}${path}" || true)"
+              if [ "$code" = "200" ]; then
+                echo "${path} -> 200"
+                ok="true"
+                break
+              fi
+              echo "Intento ${attempt}/30 ${path} -> ${code}"
+              sleep 10
+            done
+            if [ "$ok" != "true" ]; then
+              echo "ERROR: ${path} no respondió 200 tras 30 intentos." >&2
+              exit 1
+            fi
+          done
+
+  deploy-prod:
+    name: deploy-prod
+    runs-on: ubuntu-latest
+    # Promoción a Prod (TVH-37): solo si Dev desplegó con éxito y el gate de
+    # Prod está habilitado por variable de repositorio. El environment `prod`
+    # exige aprobación manual antes de ejecutar los pasos.
+    needs: deploy
+    if: >-
+      needs.deploy.result == 'success' &&
+      vars.PROD_DEPLOY_ENABLED == 'true'
+    environment: prod
+    concurrency:
+      group: tvhub-prod
+      cancel-in-progress: false
+    env:
+      K8S_NAMESPACE: prod
+    steps:
+      - name: Checkout (SHA validado por CI)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Configurar credenciales AWS (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Actualizar kubeconfig de EKS
+        run: |
+          aws eks update-kubeconfig --name "$EKS_CLUSTER" --region "$AWS_REGION"
+
+      - name: Generar manifiestos de Prod
+        env:
+          IMAGE_TAG: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+
+          # Reutiliza la imagen ya publicada por Dev (no rebuild): solo se
+          # sustituye el placeholder por el SHA validado por CI.
+          MANIFESTS="$RUNNER_TEMP/k8s-prod"
+          mkdir -p "$MANIFESTS"
+
+          for f in namespace deployment service ingress; do
+            sed -e 's|namespace: dev|namespace: prod|g' \
+                -e 's|environment: dev|environment: prod|g' \
+                -e 's|name: dev|name: prod|g' \
+                -e 's|alb.ingress.kubernetes.io/group.name: tvhub|alb.ingress.kubernetes.io/group.name: tvhub-prod|g' \
+                -e "s|sha256-placeholder|${IMAGE_TAG}|g" \
+                "infra/k8s/backend/${f}.yaml" > "${MANIFESTS}/${f}.yaml"
+          done
+
+      - name: Aplicar namespace
+        run: |
+          set -euo pipefail
+          kubectl apply -f "$RUNNER_TEMP/k8s-prod/namespace.yaml"
+
+      - name: Crear/actualizar secretos de Kubernetes
+        # Mismos GitHub Secrets que Dev; sobre el namespace prod ya creado.
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+        run: |
+          set +x
+          set -euo pipefail
+
+          kubectl -n "$K8S_NAMESPACE" create secret docker-registry dockerhub \
+            --docker-server=https://index.docker.io/v1/ \
+            --docker-username="$DOCKERHUB_USERNAME" \
+            --docker-password="$DOCKERHUB_TOKEN" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+          kubectl -n "$K8S_NAMESPACE" create secret generic tvhub-secrets \
+            --from-literal=MONGODB_URI="$MONGODB_URI" \
+            --from-literal=JWT_SECRET="$JWT_SECRET" \
+            --from-literal=JWT_REFRESH_SECRET="$JWT_REFRESH_SECRET" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Aplicar manifiestos del backend
+        run: |
+          set -euo pipefail
+          kubectl apply -f "$RUNNER_TEMP/k8s-prod/deployment.yaml"
+          kubectl apply -f "$RUNNER_TEMP/k8s-prod/service.yaml"
+          kubectl apply -f "$RUNNER_TEMP/k8s-prod/ingress.yaml"
+
+          kubectl -n "$K8S_NAMESPACE" rollout status deployment/tvhub-api \
+            --timeout=300s
+
+      - name: Verificar health y ready vía Ingress
+        run: |
+          set -euo pipefail
+
+          HOST="$(kubectl -n "$K8S_NAMESPACE" get ingress tvhub-api \
+            -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' || true)"
+
+          if [ -z "$HOST" ]; then
+            echo "ERROR: el Ingress tvhub-api (prod) aún no tiene hostname de ALB." >&2
+            echo "Revisa que AWS Load Balancer Controller haya reconciliado el" >&2
+            echo "Ingress de Prod antes de reintentar." >&2
+            exit 1
+          fi
+
+          BASE="http://${HOST}"
+          echo "URL pública (Prod): ${BASE}"
 
           for path in /health /ready; do
             ok="false"
