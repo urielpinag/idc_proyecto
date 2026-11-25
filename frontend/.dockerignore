@@ -1,0 +1,14 @@
+# Artefactos y entornos locales
+node_modules
+npm-debug.log*
+.DS_Store
+
+# Pruebas, documentación y scripts de verificación (no se sirven en runtime)
+test
+docs
+scripts
+README.md
+
+# Ficheros de contenedor
+Dockerfile
+.dockerignore
