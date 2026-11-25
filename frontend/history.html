@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TV Hub — Historial</title>
+    <meta name="description" content="Historial de reproducción de TV Hub: pantalla base, aún sin registro real." />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="./config.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">TV Hub <small>IPTV</small></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="./login.html" data-nav="login">Iniciar sesión</a></li>
+          <li><a href="./channels.html" data-nav="channels">Canales</a></li>
+          <li><a href="./favorites.html" data-nav="favorites">Favoritos</a></li>
+          <li><a href="./history.html" data-nav="history">Historial</a></li>
+        </ul>
+      </nav>
+      <span id="api-status" class="api-status" data-health="unknown">API: comprobando…</span>
+    </header>
+
+    <main>
+      <h1 class="page-title">Historial</h1>
+      <p class="page-subtitle">
+        Pantalla base del historial de reproducción. El registro real vendrá de
+        <code>${API_BASE_URL}/api/history</code> con el usuario autenticado.
+      </p>
+
+      <section class="panel" aria-labelledby="history-title">
+        <h2 id="history-title" class="visually-hidden">Reproducciones recientes</h2>
+        <div id="history-notice" aria-live="polite"></div>
+
+        <table class="data-table">
+          <caption>Filas de ejemplo — no representan actividad real.</caption>
+          <thead>
+            <tr>
+              <th scope="col">Canal</th>
+              <th scope="col">Reproducido</th>
+              <th scope="col">Duración</th>
+            </tr>
+          </thead>
+          <tbody id="history-body"></tbody>
+        </table>
+
+        <p class="helper">
+          El historial solo se guardará cuando exista sesión iniciada (auth en <code>TVH-30</code>) y el
+          endpoint <code>/api/history</code> del backend.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>TV Hub — scaffold de interfaz (TVH-05). Datos sintéticos.</span>
+      <span><a href="./channels.html">Ir al catálogo</a></span>
+    </footer>
+
+    <script type="module" src="./js/history.js"></script>
+  </body>
+</html>

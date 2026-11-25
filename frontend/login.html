@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TV Hub — Iniciar sesión</title>
+    <meta name="description" content="Interfaz base de TV Hub: inicio de sesión (maqueta, sin autenticación real)." />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="./config.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">TV Hub <small>IPTV</small></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="./login.html" data-nav="login">Iniciar sesión</a></li>
+          <li><a href="./channels.html" data-nav="channels">Canales</a></li>
+          <li><a href="./favorites.html" data-nav="favorites">Favoritos</a></li>
+          <li><a href="./history.html" data-nav="history">Historial</a></li>
+        </ul>
+      </nav>
+      <span id="api-status" class="api-status" data-health="unknown">API: comprobando…</span>
+    </header>
+
+    <main>
+      <section class="panel auth-card" aria-labelledby="login-title">
+        <h1 id="login-title" class="page-title">Iniciar sesión</h1>
+        <p class="page-subtitle">
+          Maqueta de la pantalla de acceso. <strong>No hay autenticación real</strong> en este scaffold:
+          el formulario no envía credenciales a ningún servidor.
+        </p>
+
+        <form id="login-form" class="auth-form" novalidate>
+          <label for="login-email">
+            Correo electrónico
+            <input id="login-email" name="email" type="email" autocomplete="username" placeholder="usuario@ejemplo.com" />
+          </label>
+          <label for="login-password">
+            Contraseña
+            <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" />
+          </label>
+          <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+
+        <div id="login-notice" aria-live="polite"></div>
+        <p id="login-health" class="helper">Estado del backend: sin comprobar.</p>
+        <p class="helper">
+          El auth con JWT y refresh rotativo se implementa en el backend con <code>TVH-30</code>.
+          El catálogo sigue disponible en <a href="./channels.html">Canales</a> con datos de respaldo.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>TV Hub — scaffold de interfaz (TVH-05). Datos sintéticos.</span>
+      <span><a href="./channels.html#player-title">Probar el reproductor</a></span>
+    </footer>
+
+    <script type="module" src="./js/login.js"></script>
+  </body>
+</html>
