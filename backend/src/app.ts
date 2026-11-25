@@ -15,6 +15,7 @@ import { errorHandler, notFoundHandler } from './middlewares/error-handler.js';
 import { authRouter } from './routes/auth-routes.js';
 import { channelsRouter } from './routes/channels-routes.js';
 import { healthRouter } from './routes/health-routes.js';
+import { playlistsRouter } from './routes/playlists-routes.js';
 
 export type CreateAppOptions = {
   /** Orígenes permitidos por CORS. Si se omite, se leen de `CORS_ORIGINS`. */
@@ -33,7 +34,7 @@ export type CreateAppOptions = {
  *   configurada (compatible con cookies/credenciales del frontend local) y
  *   solo acepta los orígenes de la lista cuando existe. Con credenciales no se
  *   puede combinar `*`, así que sin lista se refleja el origen de la petición.
- * - Monta `/health`, `/ready`, `/api/auth` y `/api/channels`.
+ * - Monta `/health`, `/ready`, `/api/auth`, `/api/channels` y `/api/playlists`.
  * - Termina con el 404 JSON y el manejador de errores de la API.
  */
 export function createApp(options: CreateAppOptions = {}): Express {
@@ -67,6 +68,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
   app.use('/', healthRouter);
   app.use('/api/auth', authRouter);
   app.use('/api/channels', channelsRouter);
+  app.use('/api/playlists', playlistsRouter);
   options.beforeNotFound?.(app);
 
   app.use(notFoundHandler);
