@@ -22,3 +22,6 @@ if (!process.env.MONGOMS_VERSION) {
 if (!process.env.MONGOMS_DOWNLOAD_DIR) {
   process.env.MONGOMS_DOWNLOAD_DIR = `${process.cwd()}/.cache/mongodb-binaries`;
 }
+
+// Trazas DESACTIVADAS en tests: sin exporter, sin handles abiertos.
+process.env.OTEL_TRACING_ENABLED = 'false';

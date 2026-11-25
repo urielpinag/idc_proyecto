@@ -1,5 +1,12 @@
 import 'dotenv/config';
 
+// TVH-41 (patrón instrumentation-file de OpenTelemetry): este import debe ir
+// ANTES de cualquier módulo de la app. Las auto-instrumentaciones parchean
+// `http`/`express` al registrarse, así que el SDK debe arrancar aquí, a nivel
+// de módulo, y no desde `main()`.
+import './observability/tracing.js';
+import { getTracingHandle } from './observability/tracing.js';
+
 /**
  * Punto de entrada del servidor.
  *
@@ -63,6 +70,7 @@ export async function main(): Promise<void> {
       server.close(() => resolve());
     });
     await disconnectDatabase();
+    await getTracingHandle()?.shutdown().catch(() => undefined);
     process.exit(0);
   };
 
