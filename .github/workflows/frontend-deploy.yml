@@ -123,3 +123,103 @@ jobs:
           done
           echo "El frontend no respondió 200 tras 300s" >&2
           exit 1
+
+  # TVH-39 — Despliegue del frontend en EKS Prod.
+  # Reutiliza la imagen ya publicada por dev (${{ github.sha }}), NO reconstruye.
+  # Gateado por vars.PROD_DEPLOY_ENABLED == 'true' y el entorno `prod`
+  # (aprobación manual). Genera manifiestos prod en $RUNNER_TEMP a partir de
+  # infra/k8s/frontend + backend/namespace.yaml aplicando la transformación dev→prod.
+  # Sin destroy: solo apply/rollout.
+  deploy-prod:
+    name: deploy-prod
+    needs: deploy
+    if: vars.PROD_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: prod
+    concurrency:
+      group: tvhub-prod
+      cancel-in-progress: false
+    env:
+      NAMESPACE_PROD: prod
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configurar credenciales de AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Actualizar kubeconfig
+        run: aws eks update-kubeconfig --name "$CLUSTER_NAME" --region "$AWS_REGION"
+      - name: Generar manifiestos de prod
+        run: |
+          MANIFEST_DIR="$RUNNER_TEMP/manifests-prod"
+          mkdir -p "$MANIFEST_DIR"
+
+          apply_transform() {
+            sed \
+              -e "s|namespace: dev|namespace: $NAMESPACE_PROD|g" \
+              -e "s|name: dev|name: $NAMESPACE_PROD|g" \
+              -e "s|environment: dev|environment: $NAMESPACE_PROD|g" \
+              -e "s|alb.ingress.kubernetes.io/group.name: tvhub|alb.ingress.kubernetes.io/group.name: tvhub-prod|g" \
+              -e "s|dev.tvhub.local|prod.tvhub.local|g" \
+              -e "s|sha256-placeholder|${{ github.sha }}|g" \
+              "$1" > "$2"
+          }
+
+          apply_transform infra/k8s/backend/namespace.yaml "$MANIFEST_DIR/namespace.yaml"
+          apply_transform infra/k8s/frontend/deployment.yaml "$MANIFEST_DIR/deployment.yaml"
+          apply_transform infra/k8s/frontend/service.yaml "$MANIFEST_DIR/service.yaml"
+          apply_transform infra/k8s/frontend/ingress.yaml "$MANIFEST_DIR/ingress.yaml"
+
+          echo "MANIFEST_DIR=$MANIFEST_DIR" >> "$GITHUB_ENV"
+      - name: Aplicar namespace
+        run: kubectl apply -f "$MANIFEST_DIR/namespace.yaml"
+      - name: Crear imagePullSecret de Docker Hub
+        run: |
+          kubectl -n "$NAMESPACE_PROD" create secret docker-registry dockerhub \
+            --docker-server=docker.io \
+            --docker-username="${{ secrets.DOCKERHUB_USERNAME }}" \
+            --docker-password="${{ secrets.DOCKERHUB_TOKEN }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+      - name: Desplegar frontend en prod
+        run: |
+          kubectl apply -f "$MANIFEST_DIR/deployment.yaml"
+          kubectl apply -f "$MANIFEST_DIR/service.yaml"
+          kubectl apply -f "$MANIFEST_DIR/ingress.yaml"
+      - name: Esperar rollout
+        run: kubectl -n "$NAMESPACE_PROD" rollout status deployment/tvhub-web --timeout=300s
+      - name: Obtener hostname del ALB de prod
+        id: alb
+        run: |
+          for i in $(seq 1 30); do
+            HOST=$(kubectl -n "$NAMESPACE_PROD" get ingress tvhub-web \
+              -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || true)
+            if [ -n "$HOST" ]; then
+              echo "host=$HOST" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "No se obtuvo hostname del ALB de prod tras 300s" >&2
+          exit 1
+      - name: Publicar URL de la API en prod
+        env:
+          API_BASE_URL: http://${{ steps.alb.outputs.host }}
+        run: |
+          kubectl -n "$NAMESPACE_PROD" set env deployment/tvhub-web API_BASE_URL="$API_BASE_URL"
+          kubectl -n "$NAMESPACE_PROD" rollout status deployment/tvhub-web --timeout=300s
+      - name: Verificar URL pública de prod
+        env:
+          BASE_URL: http://${{ steps.alb.outputs.host }}
+        run: |
+          for i in $(seq 1 30); do
+            CODE=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$BASE_URL/" || true)
+            if [ "$CODE" = "200" ]; then
+              echo "Frontend prod disponible en $BASE_URL/"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "El frontend de prod no respondió 200 tras 300s" >&2
+          exit 1
