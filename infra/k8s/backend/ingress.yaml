@@ -33,3 +33,17 @@ spec:
                 name: tvhub-api
                 port:
                   number: 80
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: tvhub-api
+                port:
+                  number: 80
+          - path: /ready
+            pathType: Prefix
+            backend:
+              service:
+                name: tvhub-api
+                port:
+                  number: 80
