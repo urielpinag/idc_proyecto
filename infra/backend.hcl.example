@@ -1,0 +1,11 @@
+# Backend remoto de Terraform para TV Hub.
+#
+# Copiar a `backend.hcl` (o invocar `terraform init -backend-config=backend.hcl`)
+# después de aplicar `infra/bootstrap`, cuyas salidas indican los valores reales.
+# No contiene credenciales: la autenticación la resuelve el proveedor AWS.
+
+bucket         = "tvhub-terraform-state-<account_id>"
+key            = "tvhub/terraform.tfstate"
+region         = "us-east-1"
+dynamodb_table = "tvhub-terraform-locks"
+encrypt        = true
