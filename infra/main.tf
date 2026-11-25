@@ -18,3 +18,13 @@ module "eks" {
   node_desired_size  = var.node_desired_size
   node_max_size      = var.node_max_size
 }
+
+module "iam" {
+  source = "./modules/iam"
+
+  project_name = var.project_name
+  github_repo  = var.github_repo
+  cluster_name = module.eks.cluster_name
+
+  cluster_oidc_issuer_url = module.eks.oidc_issuer_url
+}

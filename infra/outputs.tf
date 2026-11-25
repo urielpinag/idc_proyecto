@@ -47,3 +47,18 @@ output "node_group_name" {
   description = "Nombre del node group gestionado."
   value       = module.eks.node_group_name
 }
+
+output "github_deploy_role_arn" {
+  description = "ARN del rol IAM que asume GitHub Actions vía OIDC."
+  value       = module.iam.deploy_role_arn
+}
+
+output "github_oidc_provider_arn" {
+  description = "ARN del proveedor OIDC de GitHub Actions."
+  value       = module.iam.github_oidc_provider_arn
+}
+
+output "eks_oidc_provider_arn" {
+  description = "ARN del proveedor OIDC del cluster EKS."
+  value       = module.iam.eks_oidc_provider_arn
+}

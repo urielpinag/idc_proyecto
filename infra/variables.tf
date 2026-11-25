@@ -4,6 +4,12 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
+variable "github_repo" {
+  description = "Repositorio GitHub (owner/nombre) autorizado a desplegar vía OIDC."
+  type        = string
+  default     = "urielpinag/idc_proyecto"
+}
+
 variable "project_name" {
   description = "Nombre del proyecto usado en tags y nombres de recursos."
   type        = string
