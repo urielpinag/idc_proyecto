@@ -27,3 +27,8 @@ output "node_group_name" {
   description = "Nombre del node group gestionado."
   value       = aws_eks_node_group.this.node_group_name
 }
+
+output "cluster_security_group_id" {
+  description = "ID del security group gestionado por EKS para el plano de control y la comunicación con los nodos."
+  value       = aws_eks_cluster.this.vpc_config[0].cluster_security_group_id
+}

@@ -56,3 +56,15 @@ variable "node_max_size" {
   type        = number
   default     = 3
 }
+
+variable "master_username" {
+  description = "Usuario maestro del cluster DocumentDB. Se inyecta desde secretos del entorno."
+  type        = string
+  sensitive   = true
+}
+
+variable "master_password" {
+  description = "Contraseña del usuario maestro del cluster DocumentDB. Se inyecta desde secretos del entorno."
+  type        = string
+  sensitive   = true
+}
