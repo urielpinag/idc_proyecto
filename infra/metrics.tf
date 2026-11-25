@@ -11,5 +11,5 @@ resource "helm_release" "metrics_server" {
     value = "--kubelet-insecure-tls"
   }
 
-  depends_on = [aws_eks_node_group.this]
+  depends_on = [module.eks]
 }

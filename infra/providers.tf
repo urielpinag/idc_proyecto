@@ -4,10 +4,14 @@ provider "aws" {
 
 data "aws_eks_cluster" "this" {
   name = "${var.project_name}-eks"
+
+  depends_on = [module.eks]
 }
 
 data "aws_eks_cluster_auth" "this" {
   name = "${var.project_name}-eks"
+
+  depends_on = [module.eks]
 }
 
 provider "helm" {
