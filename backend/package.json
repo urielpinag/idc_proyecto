@@ -1,0 +1,47 @@
+{
+  "name": "tvhub-api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "API REST de TV Hub (Express 5 + TypeScript + Mongoose)",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "clean": "rm -rf dist coverage"
+  },
+  "dependencies": {
+    "cors": "2.8.5",
+    "dotenv": "17.4.2",
+    "express": "5.3.0",
+    "mongoose": "8.24.11"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@jest/globals": "30.5.2",
+    "@types/cors": "2.8.19",
+    "@types/express": "5.0.6",
+    "@types/jest": "30.0.0",
+    "@types/node": "22.20.5",
+    "@types/supertest": "6.0.3",
+    "cross-env": "7.0.3",
+    "eslint": "9.39.5",
+    "globals": "16.5.0",
+    "jest": "30.5.2",
+    "mongodb-memory-server": "10.4.3",
+    "supertest": "7.3.2",
+    "ts-jest": "29.4.15",
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.74.0"
+  }
+}

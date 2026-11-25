@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+
+# Build de TypeScript
+dist/
+
+# Cobertura de pruebas
+coverage/
+
+# Variables de entorno con secretos
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Sistema operativo
+.DS_Store
+
+# mongodb-memory-server (binarios descargados en pruebas)
+.mongodb-binaries/
+.cache/
