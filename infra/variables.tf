@@ -69,6 +69,12 @@ variable "master_password" {
   sensitive   = true
 }
 
+variable "log_retention_days" {
+  description = "Días de retención de los log groups de CloudWatch."
+  type        = number
+  default     = 30
+}
+
 variable "github_repo" {
   description = "Repositorio GitHub (owner/nombre) autorizado a desplegar vía OIDC."
   type        = string

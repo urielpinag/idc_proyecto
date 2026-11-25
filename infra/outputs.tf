@@ -87,3 +87,23 @@ output "lbc_policy_arn" {
   description = "ARN de la policy IAM del AWS Load Balancer Controller."
   value       = module.lbc.policy_arn
 }
+
+output "application_log_group_names" {
+  description = "Nombres de los log groups de aplicación por ambiente."
+  value       = module.cloudwatch.application_log_group_names
+}
+
+output "application_log_group_arns" {
+  description = "ARNs de los log groups de aplicación por ambiente."
+  value       = module.cloudwatch.application_log_group_arns
+}
+
+output "container_insights_log_group_name" {
+  description = "Nombre del log group de Container Insights del cluster."
+  value       = module.cloudwatch.container_insights_log_group_name
+}
+
+output "container_insights_log_group_arn" {
+  description = "ARN del log group de Container Insights del cluster."
+  value       = module.cloudwatch.container_insights_log_group_arn
+}
