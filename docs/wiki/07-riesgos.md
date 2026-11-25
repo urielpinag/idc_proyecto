@@ -1,7 +1,8 @@
 # 07 · Riesgos y pendientes de confirmar
 
-Registro de riesgos del proyecto y decisiones que **aún no** están cerradas. Cada riesgo indica su impacto,
-mitigación y responsable.
+Registro de riesgos del proyecto. Cada riesgo indica su impacto, mitigación y responsable. **R1 y R1b**
+quedaron **confirmados por el profesor el 25 nov 2026**; **sigue pendiente R2** (cuenta AWS con tope de
+gasto).
 
 ## R1 · Rúbrica con "Azure Portal o CloudFlare" vs. AWS + CloudWatch
 
@@ -9,9 +10,13 @@ mitigación y responsable.
   o CloudFlare"**— menciona **recursos y métricas en Azure Portal o CloudFlare**; con AWS los recursos
   y métricas se muestran en **CloudWatch / la consola de AWS**.
 - **Impacto:** medio — podría no aceptarse la evidencia de monitoreo.
-- **Mitigación:** **PENDIENTE DE CONFIRMAR CON EL PROFESOR**. Argumento: la
+- **Mitigación:** **CONFIRMADO POR EL PROFESOR — 25 nov 2026**. La
   **`Guia_Aprendizaje_O2026_ESI3905O.docx`** (material **externo al repo**, no versionado) permite
-  explícitamente **"AWS, Microsoft Azure u otro"** como plataforma de despliegue.
+  explícitamente **"AWS, Microsoft Azure u otro"** como plataforma de despliegue y **"código en GitHub o
+  Azure DevOps"**, así que la plataforma es válida sin necesidad de excepción. Respuesta del profesor
+  (25 nov 2026): *(i)* «Para GitHub + AWS/EKS/DocumentDB, sí está bien ese stack tecnológico» y *(ii)*
+  «Para CloudWatch + X-Ray/ADOT para APM, está bien también ya que es lo que mejor se va a adaptar con las
+  herramientas que elegimos». Ver *Justificación de las decisiones de plataforma y observabilidad*.
 - **Responsable:** Persona A (confirmación) · Persona B (registro en el reporte).
 
 ## R1b · Rúbrica nombra Prometheus/Grafana vs. AWS CloudWatch + X-Ray/ADOT
@@ -23,10 +28,15 @@ mitigación y responsable.
   DOCX. Ambas fuentes son **externas al repo** (diapositivas del curso y guía, no versionadas). La sustitución
   no está enumerada como aprobada.
 - **Impacto:** bajo/medio — podría no aceptarse la evidencia de monitoreo/APM con la herramienta pedida.
-- **Mitigación:** **PENDIENTE DE CONFIRMAR CON EL PROFESOR**. Argumento: la guía de aprendizaje del curso
+- **Mitigación:** **CONFIRMADO POR EL PROFESOR — 25 nov 2026**: **Prometheus/Grafana queda descartado con
+  autorización**. Respuesta del profesor: «**no es necesario lo de Prometheus/Grafana ya que ya tenemos las
+  otras como herramientas para observabilidad**». La guía de aprendizaje del curso
   (`Guia_Aprendizaje_O2026_ESI3905O.docx`) permite explícitamente **AWS** y nombra **Prometheus/Grafana** entre
-  las tecnologías vistas en clase, que se citan como base del stack; se explica la equivalencia funcional
-  CloudWatch + X-Ray/ADOT frente a "Monitoring | Logging | APM" de S13.
+  las tecnologías vistas en clase, pero **S13 "DevOps Summary" slide 16** pide «Monitoring | Logging | APM»
+  **sin imponer una herramienta concreta**; la equivalencia funcional **CloudWatch + X-Ray/ADOT** cubre ese
+  punto. Es una **excepción justificada y autorizada**: se mantiene el resto de tecnologías vistas en clase y
+  se sustituye únicamente la herramienta de observabilidad por su equivalente nativo de AWS. Ver
+  *Justificación de las decisiones de plataforma y observabilidad*.
 - **Responsable:** Persona A (confirmación) · Persona B (registro en el reporte).
 
 ## R2 · Coste real de EKS y DocumentDB
@@ -94,12 +104,42 @@ mitigación y responsable.
   entiendan todo el sistema.
 - **Responsable:** ambos.
 
+## Justificación de las decisiones de plataforma y observabilidad
+
+Respuestas del profesor y la justificación técnica que las sostiene (25 nov 2026).
+
+- **(i) GitHub + AWS / EKS + DocumentDB:** la guía `Guia_Aprendizaje_O2026_ESI3905O.docx` permite
+  explícitamente *«AWS, Microsoft Azure, u otro»* y *«código en GitHub o Azure DevOps»*, así que la
+  plataforma es válida sin necesidad de excepción. **EKS** lleva a la nube el **Kubernetes** visto en clase
+  (S14/minikube: Deployment, Service, Ingress, HPA, metrics-server) y mantiene los contenedores Docker del
+  curso. **DocumentDB** es el equivalente gestionado de **MongoDB/Mongoose**, la BD de la propuesta TV Hub,
+  evitando operar un StatefulSet propio. Se conservan todas las tecnologías vistas (Docker, Kubernetes,
+  Terraform, pipelines YAML, GitHub Actions) y el código sigue siendo explicable por el equipo, cumpliendo la
+  regla de la guía sobre uso de IA.
+- **(ii) CloudWatch + AWS X-Ray / ADOT:** es la suite **nativa de AWS** y por eso «mejor se adapta a las
+  herramientas elegidas»: **CloudWatch Logs** recoge errores y mensajes, **X-Ray / ADOT (OpenTelemetry)**
+  produce las **trazas distribuidas** del backend, **Container Insights** aporta **CPU y Memoria** de los pods
+  de EKS y las **métricas del ALB** aportan **Request**; todo se unifica en un **dashboard de CloudWatch**.
+  Application Insights/Azure Monitor y Cloudflare Analytics no aplican porque no hay recursos en Azure ni
+  Cloudflare. Se satisfacen íntegramente «APM: Trazas, Errores, Mensajes» y «métricas CPU, Memoria, Request»
+  de la rúbrica, sustituyendo el «portal de Azure o Cloudflare» por su equivalente funcional en AWS.
+- **(iii) Docker Hub + GitHub Secrets + rol IAM vía OIDC:** la rúbrica pide «Docker Hub: Service
+  connection». En Azure DevOps eso es una *service connection*; en **GitHub Actions** el equivalente son
+  **GitHub Secrets** (`DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN`) para el registry y un **rol IAM asumido por
+  OIDC** para que el workflow hable con AWS **sin credenciales estáticas** (más seguro que guardar access
+  keys). Se mantiene **Docker Hub** como registry (no ECR), tal como pide la rúbrica.
+- **(iv) Sin Prometheus/Grafana:** la guía DOCX los nombra entre las tecnologías vistas, pero **S13 "DevOps
+  Summary" slide 16 pide «Monitoring | Logging | APM» sin imponer una herramienta concreta**, y el profesor
+  confirmó que con **CloudWatch + X-Ray/ADOT** basta. Añadirlos **duplicaría la instrumentación** (métricas ya
+  cubiertas por Container Insights + ALB), añadiría componentes que **no se integran de forma nativa con el
+  stack AWS elegido** y aumentaría la carga de un equipo de 2. Es una **excepción justificada y autorizada**.
+
 ## Resumen
 
 | ID | Riesgo | Impacto | Estado |
 |----|--------|---------|--------|
-| R1 | CloudWatch vs. Azure/CloudFlare en la rúbrica | Medio | **Pendiente de confirmar** |
-| R1b | CloudWatch + X-Ray/ADOT vs. Prometheus/Grafana en la rúbrica | Bajo/Medio | **Pendiente de confirmar** |
+| R1 | CloudWatch vs. Azure/CloudFlare en la rúbrica | Medio | **Confirmado (25 nov 2026)** |
+| R1b | CloudWatch + X-Ray/ADOT vs. Prometheus/Grafana en la rúbrica | Bajo/Medio | **Confirmado (25 nov 2026)** |
 | R2 | Coste EKS + DocumentDB | Alto | Mitigación definida |
 | R3 | Compatibilidad DocumentDB ↔ Mongoose | Alto | A validar en Dev |
 | R4 | APM y Terraform autodidactas | Medio | Mitigación definida |

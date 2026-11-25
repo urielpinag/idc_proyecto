@@ -69,6 +69,18 @@
 - Las credenciales del usuario de Docker Hub se guardan como **GitHub Secrets** y EKS descarga las imágenes
   mediante `imagePullSecrets`.
 
+### 7. Observabilidad: CloudWatch + X-Ray/ADOT (sin Prometheus/Grafana)
+
+- **APM nativo de AWS**: **CloudWatch Logs** (errores y mensajes) + **X-Ray / ADOT (OpenTelemetry)** (trazas
+  distribuidas) cubren «Trazas, Errores, Mensajes» sin herramientas externas.
+- **Métricas CPU/Memoria/Request**: **Container Insights** (CPU/Mem de los pods) + **métricas del ALB**
+  (Request), unificadas en un **dashboard de CloudWatch**.
+- **"Service connection" a Docker Hub**: en GitHub Actions se resuelve con **GitHub Secrets** +
+  **rol IAM asumido por OIDC** (sin credenciales estáticas), manteniendo **Docker Hub** como registry.
+- **Por qué NO Prometheus/Grafana**: **S13 slide 16** pide «Monitoring | Logging | APM» sin imponer
+  herramienta; el profesor **autorizó su descarte** (25 nov 2026). Añadirlos **duplicaría la instrumentación**
+  y no se integran nativos con el stack AWS; excepción justificada, ver `07-riesgos.md` (R1b).
+
 ## Compatibilidad DocumentDB ↔ Mongoose (importante)
 
 DocumentDB **imita** la API de MongoDB, pero está certificada para versiones antiguas (**~3.6 / 4.0** de la
@@ -95,4 +107,5 @@ API de MongoDB), mientras que la propuesta
 - Se permite **IA** siempre que se conserven las tecnologías vistas en clase y el equipo **pueda explicar el
   código**.
 - Las tecnologías de referencia son Docker, Kubernetes, Terraform, pipelines YAML, Prometheus/Grafana y
-  GitHub; AWS con CloudWatch cubre el monitoreo exigido.
+  GitHub; AWS con CloudWatch cubre el monitoreo exigido. **Prometheus/Grafana se sustituye por
+  CloudWatch + X-Ray/ADOT** (excepción autorizada por el profesor, 25 nov 2026; ver §7).
