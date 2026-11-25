@@ -8,12 +8,14 @@ import 'dotenv/config';
  * proceso termina con código de error en vez de arrancar sin BD.
  */
 
+import { pathToFileURL } from 'node:url';
+
 import { createServer, type Server } from 'node:http';
 
 import { createApp } from './app.js';
 import { connectDatabase, disconnectDatabase } from './config/database.js';
 import { loadConfig, type AppConfig } from './config/env.js';
-import { isDirectRun, resolveListeningPort } from './utils/entrypoint.js';
+import { resolveListeningPort } from './utils/entrypoint.js';
 
 export type RunningServer = {
   server: Server;
@@ -67,6 +69,18 @@ export async function main(): Promise<void> {
   process.once('SIGINT', () => void shutdown('SIGINT'));
   process.once('SIGTERM', () => void shutdown('SIGTERM'));
 }
+
+/**
+ * `true` cuando este módulo es el programa principal (`node dist/index.js`) y no
+ * al importarlo (tests, `tsx`). Se compara `import.meta.url` de `index` con el
+ * script de `process.argv[1]`; el util `entrypoint.ts` no sirve para esto porque
+ * compara su propio `import.meta.url`.
+ */
+const entrypointPath = process.argv[1];
+const isDirectRun =
+  entrypointPath !== undefined &&
+  entrypointPath.trim() !== '' &&
+  import.meta.url === pathToFileURL(entrypointPath).href;
 
 if (isDirectRun) {
   main().catch((error: unknown) => {
