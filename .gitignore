@@ -1,2 +1,17 @@
 AGENTS.md
 .DS_Store
+
+# Node / TypeScript
+node_modules/
+dist/
+coverage/
+
+# Entorno
+.env
+.env.*
+!.env.example
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
