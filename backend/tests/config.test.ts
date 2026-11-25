@@ -52,14 +52,41 @@ describe('config/env', () => {
 });
 
 describe('createApp', () => {
-  it('permite cualquier origen cuando la lista está vacía', async () => {
+  it('refleja el Origin cuando la lista está vacía (credenciales compatibles)', async () => {
     const app = createApp({ corsOrigins: [] });
 
     const response = await request(app)
       .get('/health')
       .set('Origin', 'http://cualquier-origen.test');
 
-    expect(response.headers['access-control-allow-origin']).toBe('*');
+    expect(response.headers['access-control-allow-origin']).toBe('http://cualquier-origen.test');
+    expect(response.headers['access-control-allow-credentials']).toBe('true');
+  });
+
+  it('permite peticiones sin Origin y no rechaza las de otros orígenes', async () => {
+    const app = createApp({ corsOrigins: [] });
+
+    const withoutOrigin = await request(app).get('/health');
+    expect(withoutOrigin.status).toBe(200);
+    expect(withoutOrigin.headers['access-control-allow-origin']).toBeUndefined();
+
+    const preflight = await request(app)
+      .options('/api/auth/login')
+      .set('Origin', 'http://otro-origen.test')
+      .set('Access-Control-Request-Method', 'POST');
+
+    expect(preflight.status).toBe(204);
+    expect(preflight.headers['access-control-allow-origin']).toBe('http://otro-origen.test');
+  });
+
+  it('no acepta orígenes fuera de la lista configurada', async () => {
+    const app = createApp({ corsOrigins: ['http://permitido.test'] });
+
+    const response = await request(app)
+      .get('/health')
+      .set('Origin', 'http://no-permitido.test');
+
+    expect(response.headers['access-control-allow-origin']).toBeUndefined();
   });
 
   it('respeta CORS_ORIGINS del entorno cuando no se pasan opciones', async () => {
