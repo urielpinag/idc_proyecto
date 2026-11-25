@@ -1,0 +1,36 @@
+# Contexto de build mínimo para la imagen de la API (TVH-27).
+# Todo lo necesario para compilar (`package.json`, `package-lock.json`,
+# `tsconfig*.json`, `src/`) se conserva.
+
+# Dependencias y artefactos generados: se recrean dentro de la imagen.
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+
+# Pruebas: no forman parte del build de producción.
+tests/
+jest.config.mjs
+.DS_Store
+
+# Secretos y configuración local: nunca al contexto de build.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+
+# Metadatos de repositorio y documentación.
+.git/
+.gitignore
+.github/
+*.md
+.vscode/
+.idea/
+
+# Logs y cachés.
+*.log
+npm-debug.log*
+.cache/
+.mongodb-binaries/
