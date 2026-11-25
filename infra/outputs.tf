@@ -47,3 +47,18 @@ output "node_group_name" {
   description = "Nombre del node group gestionado."
   value       = module.eks.node_group_name
 }
+
+output "docdb_endpoint" {
+  description = "Endpoint de conexión del cluster DocumentDB."
+  value       = module.docdb.endpoint
+}
+
+output "docdb_port" {
+  description = "Puerto de conexión del cluster DocumentDB."
+  value       = module.docdb.port
+}
+
+output "docdb_security_group_id" {
+  description = "ID del security group que controla el acceso a DocumentDB."
+  value       = module.docdb.security_group_id
+}
