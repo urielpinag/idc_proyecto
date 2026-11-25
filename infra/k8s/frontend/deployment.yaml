@@ -1,0 +1,66 @@
+# TVH-24 — Despliegue del frontend (Next.js standalone) en EKS.
+# La imagen se publica en Docker Hub (TVH-28) y se referencia por digest.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tvhub-web
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: tvhub-web
+    app.kubernetes.io/part-of: tvhub
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tvhub-web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tvhub-web
+        app.kubernetes.io/part-of: tvhub
+    spec:
+      imagePullSecrets:
+        - name: dockerhub
+      containers:
+        - name: web
+          image: carloszatarin/tvhub-web:sha256-placeholder
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "8080"
+            - name: API_BASE_URL
+              value: "http://dev.tvhub.local"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop: ["ALL"]
