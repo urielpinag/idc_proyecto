@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 /**
  * Punto de entrada del servidor.
  *
