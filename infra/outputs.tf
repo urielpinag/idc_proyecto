@@ -77,3 +77,13 @@ output "eks_oidc_provider_arn" {
   description = "ARN del proveedor OIDC del cluster EKS."
   value       = module.iam.eks_oidc_provider_arn
 }
+
+output "lbc_role_arn" {
+  description = "ARN del rol IAM del AWS Load Balancer Controller."
+  value       = module.lbc.role_arn
+}
+
+output "lbc_policy_arn" {
+  description = "ARN de la policy IAM del AWS Load Balancer Controller."
+  value       = module.lbc.policy_arn
+}
