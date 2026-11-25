@@ -55,7 +55,7 @@ resource "aws_eks_node_group" "this" {
 # --- Addons gestionados por EKS ----------------------------------------------
 
 resource "aws_eks_addon" "this" {
-  for_each = toset(["kube-proxy", "coredns", "vpc-cni", "aws-ebs-csi-driver"])
+  for_each = toset(["kube-proxy", "coredns", "vpc-cni", "aws-ebs-csi-driver", "eks-pod-identity-agent"])
 
   cluster_name = aws_eks_cluster.this.name
   addon_name   = each.value
