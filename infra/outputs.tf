@@ -62,3 +62,18 @@ output "docdb_security_group_id" {
   description = "ID del security group que controla el acceso a DocumentDB."
   value       = module.docdb.security_group_id
 }
+
+output "github_deploy_role_arn" {
+  description = "ARN del rol IAM que asume GitHub Actions vía OIDC."
+  value       = module.iam.deploy_role_arn
+}
+
+output "github_oidc_provider_arn" {
+  description = "ARN del proveedor OIDC de GitHub Actions."
+  value       = module.iam.github_oidc_provider_arn
+}
+
+output "eks_oidc_provider_arn" {
+  description = "ARN del proveedor OIDC del cluster EKS."
+  value       = module.iam.eks_oidc_provider_arn
+}

@@ -31,3 +31,13 @@ module "docdb" {
   master_username = var.master_username
   master_password = var.master_password
 }
+
+module "iam" {
+  source = "./modules/iam"
+
+  project_name = var.project_name
+  github_repo  = var.github_repo
+  cluster_name = module.eks.cluster_name
+
+  cluster_oidc_issuer_url = module.eks.oidc_issuer_url
+}
