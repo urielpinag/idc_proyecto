@@ -16,8 +16,7 @@ function currentTraceId(): string | undefined {
 }
 
 /**
- * Respuesta estándar de error. No incluye stack, mensajes del driver ni
- * variables de entorno.
+ * Respuesta estándar de error. No incluye stack ni variables de entorno.
  */
 export type ErrorResponse = {
   error: {

@@ -88,3 +88,26 @@ export async function initTracing(): Promise<TracingHandle | null> {
     return null;
   }
 }
+
+let tracingHandle: TracingHandle | null = null;
+let tracingStarted = false;
+
+/**
+ * Handle del SDK ya arrancado al importar este módulo, o `null` si las trazas
+ * están desactivadas. Lo usa `index.ts` para el apagado ordenado.
+ */
+export function getTracingHandle(): TracingHandle | null {
+  return tracingHandle;
+}
+
+/**
+ * Arranque a nivel de módulo (patrón instrumentation-file): se ejecuta en
+ * cuanto `index.ts` importa este fichero, antes de app/rutas/mongoose. Con
+ * `OTEL_TRACING_ENABLED !== 'true'` el guard sale sin registrar nada.
+ */
+if (!tracingStarted && !isTracingDisabled()) {
+  tracingStarted = true;
+  void initTracing().then((handle) => {
+    tracingHandle = handle;
+  });
+}
