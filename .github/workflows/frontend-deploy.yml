@@ -1,0 +1,125 @@
+# TVH-38 — Despliegue del frontend de TV Hub en EKS Dev.
+# Corre solo tras push a main. Las pruebas siempre se ejecutan; el despliegue
+# queda gated por la variable de repositorio DEPLOY_ENABLED == 'true' y por el
+# entorno `dev` (aprobación manual para Prod queda fuera de este workflow).
+name: Frontend Deploy Dev
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+      - 'infra/k8s/frontend/**'
+      - '.github/workflows/frontend-deploy.yml'
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: tvhub-dev
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  CLUSTER_NAME: tvhub-cluster
+  NAMESPACE: dev
+  IMAGE_NAME: carloszatarin/tvhub-web
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Pruebas
+        run: npm test
+
+  deploy:
+    name: deploy
+    needs: test
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Iniciar sesión en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Construir y publicar imagen
+        uses: docker/build-push-action@v6
+        with:
+          context: frontend
+          push: true
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+      - name: Configurar credenciales de AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Actualizar kubeconfig
+        run: aws eks update-kubeconfig --name "$CLUSTER_NAME" --region "$AWS_REGION"
+      - name: Aplicar namespace
+        run: kubectl apply -f infra/k8s/backend/namespace.yaml
+      - name: Crear imagePullSecret de Docker Hub
+        run: |
+          kubectl -n "$NAMESPACE" create secret docker-registry dockerhub \
+            --docker-server=docker.io \
+            --docker-username="${{ secrets.DOCKERHUB_USERNAME }}" \
+            --docker-password="${{ secrets.DOCKERHUB_TOKEN }}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+      - name: Desplegar frontend
+        run: |
+          sed "s|sha256-placeholder|${{ github.sha }}|" infra/k8s/frontend/deployment.yaml | kubectl apply -f -
+          kubectl apply -f infra/k8s/frontend/service.yaml
+          kubectl apply -f infra/k8s/frontend/ingress.yaml
+      - name: Esperar rollout
+        run: kubectl -n "$NAMESPACE" rollout status deployment/tvhub-web --timeout=300s
+      - name: Obtener hostname del ALB
+        id: alb
+        run: |
+          for i in $(seq 1 30); do
+            HOST=$(kubectl -n "$NAMESPACE" get ingress tvhub-web \
+              -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || true)
+            if [ -n "$HOST" ]; then
+              echo "host=$HOST" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "No se obtuvo hostname del ALB tras 300s" >&2
+          exit 1
+      - name: Publicar URL de la API
+        env:
+          API_BASE_URL: http://${{ steps.alb.outputs.host }}
+        run: |
+          kubectl -n "$NAMESPACE" set env deployment/tvhub-web API_BASE_URL="$API_BASE_URL"
+          kubectl -n "$NAMESPACE" rollout status deployment/tvhub-web --timeout=300s
+      - name: Verificar URL pública
+        env:
+          BASE_URL: http://${{ steps.alb.outputs.host }}
+        run: |
+          for i in $(seq 1 30); do
+            CODE=$(curl -s -o /dev/null -w '%{http_code}' --max-time 10 "$BASE_URL/" || true)
+            if [ "$CODE" = "200" ]; then
+              echo "Frontend disponible en $BASE_URL/"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "El frontend no respondió 200 tras 300s" >&2
+          exit 1
