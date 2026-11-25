@@ -16,6 +16,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "test:ci": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage",
     "test:watch": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --watch",
     "clean": "rm -rf dist coverage"
   },
@@ -42,6 +43,7 @@
     "eslint": "9.39.5",
     "globals": "16.5.0",
     "jest": "30.5.2",
+    "jest-junit": "16.0.0",
     "mongodb-memory-server": "10.4.3",
     "supertest": "7.3.2",
     "ts-jest": "29.4.15",
