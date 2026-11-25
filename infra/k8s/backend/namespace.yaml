@@ -1,0 +1,9 @@
+# Namespace del entorno dev del backend de TV Hub (TVH-23).
+# Separa la API del resto de recursos para aplicar RBAC y cuotas por entorno.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev
+  labels:
+    app.kubernetes.io/part-of: tvhub
+    environment: dev

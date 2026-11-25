@@ -1,0 +1,83 @@
+# Deployment de la API de TV Hub (TVH-23).
+# Dos réplicas detrás del Service ClusterIP. La imagen se sustituye por el digest
+# real publicado en Docker Hub (TVH-27/TVH-35); el placeholder falla a propósito.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tvhub-api
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: tvhub-api
+    app.kubernetes.io/part-of: tvhub
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: tvhub-api
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: tvhub-api
+        app.kubernetes.io/part-of: tvhub
+    spec:
+      imagePullSecrets:
+        - name: dockerhub
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: api
+          image: carloszatarin/tvhub-api:sha256-placeholder
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: tvhub-secrets
+                  key: MONGODB_URI
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: tvhub-secrets
+                  key: JWT_SECRET
+            - name: JWT_REFRESH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: tvhub-secrets
+                  key: JWT_REFRESH_SECRET
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL

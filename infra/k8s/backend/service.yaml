@@ -1,0 +1,19 @@
+# Service interno de la API de TV Hub (TVH-23).
+# ClusterIP: la API solo se expone al clúster; el ALB/Ingress se gestiona aparte.
+apiVersion: v1
+kind: Service
+metadata:
+  name: tvhub-api
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: tvhub-api
+    app.kubernetes.io/part-of: tvhub
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: tvhub-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
