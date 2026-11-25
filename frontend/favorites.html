@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TV Hub — Favoritos</title>
+    <meta name="description" content="Favoritos de TV Hub: pantalla base, aún sin persistencia ni autenticación." />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="./config.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">TV Hub <small>IPTV</small></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="./login.html" data-nav="login">Iniciar sesión</a></li>
+          <li><a href="./channels.html" data-nav="channels">Canales</a></li>
+          <li><a href="./favorites.html" data-nav="favorites">Favoritos</a></li>
+          <li><a href="./history.html" data-nav="history">Historial</a></li>
+        </ul>
+      </nav>
+      <span id="api-status" class="api-status" data-health="unknown">API: comprobando…</span>
+    </header>
+
+    <main>
+      <h1 class="page-title">Favoritos</h1>
+      <p class="page-subtitle">
+        Pantalla base de favoritos. La lista real vendrá de <code>${API_BASE_URL}/api/favorites</code>
+        con el usuario autenticado; aquí solo se muestra la estructura y el estado actual.
+      </p>
+
+      <section class="panel" aria-labelledby="favorites-title">
+        <h2 id="favorites-title" class="visually-hidden">Canales favoritos</h2>
+        <div id="favorites-notice" aria-live="polite"></div>
+        <span id="favorites-source" class="source-label">Origen: cargando…</span>
+        <div id="favorites-list" class="channel-list" aria-live="polite"></div>
+
+        <p class="helper">
+          Mientras no exista la API de favoritos, los botones «Añadir a favoritos» están deshabilitados a
+          propósito: no se simula una persistencia que no existe.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>TV Hub — scaffold de interfaz (TVH-05). Datos sintéticos.</span>
+      <span><a href="./channels.html">Ir al catálogo</a></span>
+    </footer>
+
+    <script type="module" src="./js/favorites.js"></script>
+  </body>
+</html>

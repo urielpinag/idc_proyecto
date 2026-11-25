@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "source": "stub",
+    "generatedBy": "TVH-05",
+    "note": "Datos sintéticos para desarrollo sin backend. Ningún contenido real ni credenciales.",
+    "synthetic": true
+  },
+  "channels": [
+    {
+      "id": "canal-demo-01",
+      "name": "Canal Demo Uno",
+      "description": "Canal ficticio de noticias para probar el catálogo y el reproductor.",
+      "logoUrl": "",
+      "streamUrl": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+      "country": "MX",
+      "countryLabel": "México",
+      "categories": ["Noticias", "General"],
+      "isActive": true,
+      "playlistId": "playlist-demo"
+    },
+    {
+      "id": "canal-demo-02",
+      "name": "Canal Demo Dos",
+      "description": "Canal ficticio de deportes para probar los filtros por categoría.",
+      "logoUrl": "",
+      "streamUrl": "https://test-streams.mux.dev/pts_shift/master.m3u8",
+      "country": "MX",
+      "countryLabel": "México",
+      "categories": ["Deportes"],
+      "isActive": true,
+      "playlistId": "playlist-demo"
+    },
+    {
+      "id": "canal-demo-03",
+      "name": "Canal Demo Tres",
+      "description": "Canal ficticio de entretenimiento para probar los filtros por país.",
+      "logoUrl": "",
+      "streamUrl": "https://demo.unified-streaming.com/k8s/features/stable/video/tears-of-steel/tears-of-steel.ism/.m3u8",
+      "country": "ES",
+      "countryLabel": "España",
+      "categories": ["Entretenimiento", "General"],
+      "isActive": true,
+      "playlistId": "playlist-demo"
+    },
+    {
+      "id": "canal-demo-04",
+      "name": "Canal Demo Cuatro",
+      "description": "Canal ficticio cultural, marcado como inactivo a propósito para probar el filtrado.",
+      "logoUrl": "",
+      "streamUrl": "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+      "country": "AR",
+      "countryLabel": "Argentina",
+      "categories": ["Cultura"],
+      "isActive": false,
+      "playlistId": "playlist-demo"
+    }
+  ]
+}

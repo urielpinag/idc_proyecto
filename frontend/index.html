@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TV Hub — IPTV</title>
+    <meta name="description" content="Interfaz base de TV Hub: catálogo, reproductor HLS, favoritos e historial." />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="./config.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">TV Hub <small>IPTV</small></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="./login.html" data-nav="login">Iniciar sesión</a></li>
+          <li><a href="./channels.html" data-nav="channels">Canales</a></li>
+          <li><a href="./favorites.html" data-nav="favorites">Favoritos</a></li>
+          <li><a href="./history.html" data-nav="history">Historial</a></li>
+        </ul>
+      </nav>
+      <span id="api-status" class="api-status" data-health="unknown">API: comprobando…</span>
+    </header>
+
+    <main>
+      <h1 class="page-title">TV Hub</h1>
+      <p class="page-subtitle">
+        Interfaz del reproductor IPTV. Esta es la navegación base del scaffold (TVH-05): sin build, servida
+        como estáticos y con Shaka Player para HLS.
+      </p>
+
+      <section class="panel" aria-labelledby="entry-title">
+        <h2 id="entry-title" class="page-title">Empezar</h2>
+        <p class="page-subtitle">Elige una sección:</p>
+        <p class="channel-actions">
+          <a class="btn btn-primary" href="./channels.html">Ver canales y reproducir</a>
+          <a class="btn" href="./login.html">Iniciar sesión (maqueta)</a>
+          <a class="btn" href="./favorites.html">Favoritos</a>
+          <a class="btn" href="./history.html">Historial</a>
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>TV Hub — scaffold de interfaz (TVH-05). Datos sintéticos.</span>
+      <span><button id="api-check-again" class="btn btn-ghost" type="button">Recomprobar /health</button></span>
+    </footer>
+
+    <script type="module">
+      import { bootPage } from './js/app.js';
+      bootPage();
+    </script>
+  </body>
+</html>

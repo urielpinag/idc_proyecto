@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TV Hub — Canales</title>
+    <meta name="description" content="Catálogo de canales de TV Hub con filtros y reproductor HLS de prueba." />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <script src="./config.js"></script>
+    <!-- Shaka Player por CDN: no hay build ni empaquetado. -->
+    <script src="https://ajax.googleapis.com/ajax/libs/shaka-player/4.8.10/shaka-player.compiled.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">TV Hub <small>IPTV</small></div>
+      <nav class="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="./login.html" data-nav="login">Iniciar sesión</a></li>
+          <li><a href="./channels.html" data-nav="channels">Canales</a></li>
+          <li><a href="./favorites.html" data-nav="favorites">Favoritos</a></li>
+          <li><a href="./history.html" data-nav="history">Historial</a></li>
+        </ul>
+      </nav>
+      <span id="api-status" class="api-status" data-health="unknown">API: comprobando…</span>
+    </header>
+
+    <main>
+      <h1 class="page-title">Canales</h1>
+      <p class="page-subtitle">
+        Catálogo leído de <code>${API_BASE_URL}/api/channels</code>. Si el backend no responde se usa el
+        stub local y se avisa aquí (modo de solo lectura: no hay sesión iniciada).
+      </p>
+
+      <div class="channels-layout">
+        <section class="panel" aria-labelledby="catalog-title">
+          <h2 id="catalog-title" class="visually-hidden">Listado de canales</h2>
+          <p id="api-status-detail" class="helper"></p>
+          <div id="channels-notice" aria-live="polite"></div>
+
+          <form class="filters" role="search" onsubmit="return false;">
+            <label class="field">
+              País
+              <select id="filter-country" name="country"></select>
+            </label>
+            <label class="field">
+              Categoría
+              <select id="filter-category" name="category"></select>
+            </label>
+            <label class="field">
+              Buscar
+              <input id="filter-search" name="q" type="search" placeholder="Nombre del canal" />
+            </label>
+          </form>
+
+          <span id="channels-source" class="source-label">Origen: cargando…</span>
+          <p id="channels-count" class="helper" aria-live="polite"></p>
+          <div id="channels-list" class="channel-list" aria-live="polite"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="player-title">
+          <h2 id="player-title" class="page-title">Reproductor</h2>
+          <div class="player-wrapper">
+            <video id="player-video" controls playsinline preload="metadata" aria-label="Reproductor HLS"></video>
+          </div>
+          <div id="player-status" aria-live="polite"></div>
+          <p class="player-meta">
+            <span id="shaka-state">Shaka: inicializando…</span>
+            <span id="player-hint"></span>
+          </p>
+          <p class="helper">
+            El stream es un fixture HLS público de pruebas (sin credenciales). La reproducción real depende
+            de la red del navegador; si falla, se muestra el error en lugar de simular éxito.
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span>TV Hub — scaffold de interfaz (TVH-05). Datos sintéticos.</span>
+      <span><button id="api-check-again" class="btn btn-ghost" type="button">Recomprobar /health</button></span>
+    </footer>
+
+    <script type="module" src="./js/channels.js"></script>
+  </body>
+</html>
