@@ -27,6 +27,10 @@ export default {
     '!src/index.ts',
     '!src/**/*.d.ts',
     '!src/types/**',
+    // TVH-41: bootstrap del SDK de OpenTelemetry (sin lógica de negocio; se
+    // activa solo con OTEL_TRACING_ENABLED=true). Medirlo exigiría arrancar un
+    // collector real en CI.
+    '!src/observability/**',
   ],
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov', 'clover'],

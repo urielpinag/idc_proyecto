@@ -1,5 +1,10 @@
 import 'dotenv/config';
 
+// TVH-41: debe ser la PRIMERA ejecución de la app (después de dotenv). Las
+// auto-instrumentaciones renovan `http`/`express`, por lo que hay que arrancar
+// antes de importar cualquier otro módulo con efectos secundarios.
+import { initTracing } from './observability/tracing.js';
+
 /**
  * Punto de entrada del servidor.
  *
@@ -53,6 +58,7 @@ function log(level: 'info' | 'error', message: string): void {
 }
 
 export async function main(): Promise<void> {
+  const tracing = await initTracing();
   const { server, config } = await startServer();
   const port = resolveListeningPort(server.address(), config.port);
   log('info', `API escuchando en el puerto ${port}`);
@@ -63,6 +69,7 @@ export async function main(): Promise<void> {
       server.close(() => resolve());
     });
     await disconnectDatabase();
+    await tracing?.shutdown().catch(() => undefined);
     process.exit(0);
   };
 
