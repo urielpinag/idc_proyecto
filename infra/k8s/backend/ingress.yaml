@@ -1,0 +1,35 @@
+# Ingress de la API de TV Hub (TVH-23).
+# ALB gestionado por AWS Load Balancer Controller. Comparte el grupo `tvhub` con
+# el frontend (TVH-24) para que un único ALB enrute /api a esta API y / al front.
+# Sin `host`: así responde al DNS que AWS asigna al ALB (el dominio final aún no existe).
+#
+# PENDIENTE (fuera de TVH-23): TLS/certificado ACM y `listen-ports` 443, además de
+#   - alb.ingress.kubernetes.io/certificate-arn: <arn del certificado ACM>
+#   - alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+#   - alb.ingress.kubernetes.io/ssl-redirect: '443'
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tvhub-api
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: tvhub-api
+    app.kubernetes.io/part-of: tvhub
+  annotations:
+    alb.ingress.kubernetes.io/group.name: tvhub
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: tvhub-api
+                port:
+                  number: 80
