@@ -1,0 +1,18 @@
+# TVH-24 — Service del frontend, consumido por el Ingress de dev.
+apiVersion: v1
+kind: Service
+metadata:
+  name: tvhub-web
+  namespace: dev
+  labels:
+    app.kubernetes.io/name: tvhub-web
+    app.kubernetes.io/part-of: tvhub
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: tvhub-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
