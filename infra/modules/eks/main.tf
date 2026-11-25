@@ -21,6 +21,10 @@ resource "aws_eks_cluster" "this" {
     endpoint_public_access  = true
   }
 
+  access_config {
+    authentication_mode = "API_AND_CONFIG_MAP"
+  }
+
   tags = local.tags
 
   depends_on = [aws_iam_role_policy_attachment.cluster_policy]

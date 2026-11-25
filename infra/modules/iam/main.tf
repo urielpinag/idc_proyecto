@@ -7,7 +7,7 @@ locals {
 
   # Issuer de GitHub Actions y de EKS sin esquema para usarlos en condiciones sub/aud.
   github_issuer = "token.actions.githubusercontent.com"
-  eks_issuer    = trimsuffix(var.cluster_oidc_issuer_url, "/")
+  eks_issuer    = trimsuffix(trimprefix(var.cluster_oidc_issuer_url, "https://"), "/")
 }
 
 # --- Thumbprints raíz de las CA que firman los tokens -------------------------
