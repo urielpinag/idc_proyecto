@@ -32,6 +32,14 @@ module "docdb" {
   master_password = var.master_password
 }
 
+module "cloudwatch" {
+  source = "./modules/cloudwatch"
+
+  project_name   = var.project_name
+  cluster_name   = module.eks.cluster_name
+  retention_days = var.log_retention_days
+}
+
 module "iam" {
   source = "./modules/iam"
 
