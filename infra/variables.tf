@@ -68,3 +68,9 @@ variable "master_password" {
   type        = string
   sensitive   = true
 }
+
+variable "github_repo" {
+  description = "Repositorio GitHub (owner/nombre) autorizado a desplegar vía OIDC."
+  type        = string
+  default     = "urielpinag/idc_proyecto"
+}
