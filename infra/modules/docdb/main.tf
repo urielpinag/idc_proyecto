@@ -34,7 +34,7 @@ resource "aws_vpc_security_group_ingress_rule" "from_nodes" {
 
 resource "aws_vpc_security_group_egress_rule" "all" {
   security_group_id = aws_security_group.this.id
-  description       = "Salida completa: DocumentDB necesita respuestas y réplica interna"
+  description       = "Salida completa: DocumentDB necesita respuestas y replica interna"
   ip_protocol       = "-1"
   cidr_ipv4         = "0.0.0.0/0"
 
