@@ -1,13 +1,8 @@
 # Dashboard de observabilidad para el ambiente dev.
 #
 # Cubre el mínimo de TVH-44: estado de alarmas, CPU y memoria del cluster/pods
-# (namespace CWContainerInsights) y requests 4xx/5xx del ALB
-# (namespace AWS/ApplicationELB). Es solo declarativo: las métricas reales
-# aparecen cuando Container Insights y el ALB están publicando datos.
-#
-# Las dimensiones del ALB aún no existen como input del módulo, por eso se
-# usan comodines "SEARCH"-style (dimensión LoadBalancer = "*") que agreguen
-# todos los ALB del proyecto hasta que exista un ALB real desplegado.
+# (namespace ContainerInsights) y requests, 4xx y 5xx del ALB
+# (namespace AWS/ApplicationELB) mediante expresiones SEARCH válidas.
 resource "aws_cloudwatch_dashboard" "tvhub_dev" {
   dashboard_name = "${var.project_name}-dev"
 
@@ -25,7 +20,7 @@ resource "aws_cloudwatch_dashboard" "tvhub_dev" {
         height = 6
         properties = {
           title  = "${var.project_name} dev - estado de alarmas"
-          alarms = []
+          alarms = [aws_cloudwatch_metric_alarm.dev_errors.arn]
           sortBy = "stateUpdatedTimestamp"
           states = ["ALARM", "INSUFFICIENT_DATA", "OK"]
         }
@@ -45,8 +40,8 @@ resource "aws_cloudwatch_dashboard" "tvhub_dev" {
           period = 300
           stat   = "Average"
           metrics = [
-            ["CWContainerInsights", "node_cpu_utilization", "ClusterName", var.cluster_name, { label = "CPU nodos" }],
-            ["CWContainerInsights", "pod_cpu_utilization", "ClusterName", var.cluster_name, "PodName", "*", "Namespace", "*", { label = "CPU pods" }],
+            ["ContainerInsights", "node_cpu_utilization", "ClusterName", var.cluster_name, { label = "CPU nodos" }],
+            [{ expression = "SEARCH('{ContainerInsights,ClusterName,Namespace,PodName} ClusterName=\"${var.cluster_name}\" MetricName=\"pod_cpu_utilization\"', 'Average', 300)", label = "CPU pods" }],
           ]
         }
       },
@@ -65,8 +60,27 @@ resource "aws_cloudwatch_dashboard" "tvhub_dev" {
           period = 300
           stat   = "Average"
           metrics = [
-            ["CWContainerInsights", "node_memory_utilization", "ClusterName", var.cluster_name, { label = "Memoria nodos" }],
-            ["CWContainerInsights", "pod_memory_utilization", "ClusterName", var.cluster_name, "PodName", "*", "Namespace", "*", { label = "Memoria pods" }],
+            ["ContainerInsights", "node_memory_utilization", "ClusterName", var.cluster_name, { label = "Memoria nodos" }],
+            [{ expression = "SEARCH('{ContainerInsights,ClusterName,Namespace,PodName} ClusterName=\"${var.cluster_name}\" MetricName=\"pod_memory_utilization\"', 'Average', 300)", label = "Memoria pods" }],
+          ]
+        }
+      },
+
+      # Requests totales del ALB.
+      {
+        type   = "metric"
+        x      = 0
+        y      = 12
+        width  = 8
+        height = 6
+        properties = {
+          title  = "Requests totales - ALB"
+          region = "us-east-1"
+          view   = "timeSeries"
+          period = 300
+          stat   = "Sum"
+          metrics = [
+            [{ expression = "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"RequestCount\"', 'Sum', 300)", label = "Requests ALB" }],
           ]
         }
       },
@@ -74,9 +88,9 @@ resource "aws_cloudwatch_dashboard" "tvhub_dev" {
       # Requests 4xx del ALB.
       {
         type   = "metric"
-        x      = 0
+        x      = 8
         y      = 12
-        width  = 12
+        width  = 8
         height = 6
         properties = {
           title  = "Requests 4xx - ALB"
@@ -85,8 +99,8 @@ resource "aws_cloudwatch_dashboard" "tvhub_dev" {
           period = 300
           stat   = "Sum"
           metrics = [
-            ["AWS/ApplicationELB", "HTTPCode_ELB_4XX_Count", "LoadBalancer", "*", { label = "4xx ELB" }],
-            ["AWS/ApplicationELB", "HTTPCode_Target_4XX_Count", "LoadBalancer", "*", { label = "4xx target" }],
+            [{ expression = "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"HTTPCode_ELB_4XX_Count\"', 'Sum', 300)", label = "4xx ELB" }],
+            [{ expression = "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"HTTPCode_Target_4XX_Count\"', 'Sum', 300)", label = "4xx target" }],
           ]
         }
       },
@@ -94,9 +108,9 @@ resource "aws_cloudwatch_dashboard" "tvhub_dev" {
       # Requests 5xx del ALB.
       {
         type   = "metric"
-        x      = 12
+        x      = 16
         y      = 12
-        width  = 12
+        width  = 8
         height = 6
         properties = {
           title  = "Requests 5xx - ALB"
@@ -105,8 +119,8 @@ resource "aws_cloudwatch_dashboard" "tvhub_dev" {
           period = 300
           stat   = "Sum"
           metrics = [
-            ["AWS/ApplicationELB", "HTTPCode_ELB_5XX_Count", "LoadBalancer", "*", { label = "5xx ELB" }],
-            ["AWS/ApplicationELB", "HTTPCode_Target_5XX_Count", "LoadBalancer", "*", { label = "5xx target" }],
+            [{ expression = "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"HTTPCode_ELB_5XX_Count\"', 'Sum', 300)", label = "5xx ELB" }],
+            [{ expression = "SEARCH('{AWS/ApplicationELB,LoadBalancer} MetricName=\"HTTPCode_Target_5XX_Count\"', 'Sum', 300)", label = "5xx target" }],
           ]
         }
       },
