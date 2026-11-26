@@ -34,6 +34,8 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - name: Instalar dependencias
         run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Compilar
         run: npm run build
       - name: Pruebas con cobertura
