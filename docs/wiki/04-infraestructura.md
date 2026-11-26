@@ -22,12 +22,12 @@ Este documento enumera **qué recursos se van a crear** y cómo se relacionan.
 - **Rol IAM del cluster** y **rol IAM de los nodos** con las políticas mínimas.
 - **IAM OIDC provider** del cluster (para roles IRSA de service accounts y para el *service account* del
   AWS Load Balancer Controller).
-- **Addons**: `aws-ebs-csi-driver`, `coredns`, `kube-proxy`, `vpc-cni`; **metrics-server** para el HPA.
-- **AWS Load Balancer Controller** (IRSA) que crea el **ALB** a partir del **Ingress NGINX**.
+- **Addons**: `aws-ebs-csi-driver`, `coredns`, `kube-proxy`, `vpc-cni`; **metrics-server** instalado (HPA 2→5 pendiente en `TVH-25`).
+- **AWS Load Balancer Controller** (Pod Identity) que crea el **ALB** directamente a partir del **Ingress** (`ingressClassName: alb`).
 - **Namespaces**: `dev` y `prod` (aislamiento de ambientes en el mismo clúster).
 - **Deployments + Services**: `tvhub-api` (backend) y `tvhub-web` (frontend).
-- **Ingress NGINX** → **ALB** con **URL pública** por ambiente.
-- **HPA** del backend: 2 → 5 réplicas con CPU > 70%.
+- **Ingress ALB** → **ALB** con **URL pública** (HTTP:80) por ambiente.
+- **Réplicas** del backend/frontend: 2 réplicas por ambiente (`TVH-25` para HPA queda abierto).
 - **Kubernetes Secrets** con la cadena de conexión de DocumentDB y `JWT_SECRET`.
 - **imagePullSecrets** con las credenciales de Docker Hub.
 
@@ -50,7 +50,7 @@ Este documento enumera **qué recursos se van a crear** y cómo se relacionan.
 - **CloudWatch Container Insights** (métricas de CPU, memoria, red por pod/nodo).
 - **CloudWatch Logs** con grupo por ambiente/servicio.
 - **AWS X-Ray / ADOT (OpenTelemetry)** para trazas, errores y mensajes de la API.
-- **Métricas del ALB** (requests, latencia, 4xx/5xx) y **dashboard de CloudWatch** con CPU / memoria /
+- **Métricas del ALB** (requests, 4xx/5xx) y **dashboard `tvhub-dev`** de CloudWatch con CPU / memoria /
   requests.
 
 > **Alternativa de frontend:** mantenido en EKS (Deployment + Service detrás del Ingress). Como alternativa
@@ -76,8 +76,8 @@ flowchart TB
             end
             subgraph priv["Subnets privadas"]
                 subgraph eks["Amazon EKS"]
-                    ingress["Ingress NGINX"]
-                    api["Deployment tvhub-api<br/>HPA 2-5"]
+                    ingress["Ingress ALB"]
+                    api["Deployment tvhub-api<br/>2 réplicas"]
                     web["Deployment tvhub-web"]
                     mserver["metrics-server"]
                 end
@@ -95,7 +95,7 @@ flowchart TB
 
     dockerhub["Docker Hub<br/>Imágenes backend / frontend"]
 
-    user -->|HTTPS| alb
+    user -->|HTTP| alb
     alb --> ingress
     ingress --> web
     ingress --> api

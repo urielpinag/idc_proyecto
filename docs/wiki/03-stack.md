@@ -12,7 +12,7 @@
 | Frontend | **HTML/CSS/JS vanilla + Shaka Player** | Sin build pesado; reproducción **HLS** en navegador |
 | Pruebas | **Jest + Supertest + mongodb-memory-server** | Unitarias e integración de API; cobertura ≥ 80% |
 | Contenedores | **Docker multi-stage** → **Docker Hub** | Imágenes reproducibles; EKS no requiere ECR |
-| Orquestación | **Amazon EKS** (Kubernetes) | Escalado, Ingress NGINX + ALB, HPA |
+| Orquestación | **Amazon EKS** (Kubernetes) | Ingress ALB, probes, metrics-server (HPA opcional en TVH-25) |
 | Infra como código | **Terraform** (`/infra`) | Provisiona VPC, EKS, DocumentDB, IAM, monitoreo |
 | CI/CD | **GitHub Actions** | Ambientes `dev`/`prod` con aprobación manual |
 | Observabilidad | **AWS X-Ray / ADOT + CloudWatch** | Trazas, errores, logs y métricas CPU/memoria/requests |
@@ -45,8 +45,8 @@
 
 - El curso enseña **Kubernetes** (manifiestos, Deployments, Services, Ingress, HPA, probes): EKS permite
   aplicar esos conceptos directamente.
-- **Ingress NGINX + AWS Load Balancer Controller** exponen una **URL pública** vía ALB.
-- **metrics-server + HPA** escalan de 2 a 5 réplicas con CPU > 70%.
+- **AWS Load Balancer Controller** expone una **URL pública** vía **Ingress ALB** (HTTP:80).
+- **metrics-server** instalado en EKS (HPA 2→5 pendiente como mejora opcional en `TVH-25`).
 - Frente a ECS Fargate, EKS conserva el vocabulario y las herramientas de Kubernetes del curso.
 
 ### 5. Amazon DocumentDB en lugar de MongoDB en StatefulSet

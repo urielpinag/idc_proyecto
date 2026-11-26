@@ -6,7 +6,7 @@ IPTV que se despliega en **AWS** con contenedores en **Amazon EKS** y base de da
 usando un **monorepo** en **GitHub** con CI/CD en **GitHub Actions**.
 
 > Estado: documentación de planificación. El código de aplicación (`/backend`, `/frontend`) y el código de
-> Terraform (`/infra`) se implementan después, siguiendo el backlog y los issues de este repositorio.
+> El código (`/backend`, `/frontend`), Terraform (`/infra`) y los workflows de CI/CD ya están implementados en `main`.
 
 ## Índice
 
