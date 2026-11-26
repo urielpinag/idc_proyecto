@@ -45,7 +45,7 @@ importa listas **M3U**, hace **CRUD** de canales y usuarios y hace **re-sync sin
 | Plataforma de gestión | **GitHub** (repo, Projects, Wiki, Actions) | Azure DevOps |
 | Nube | **AWS** | Azure, Cloudflare |
 | Cómputo y base de datos | **Amazon EKS + Amazon DocumentDB** | ECS Fargate, Atlas, ECR |
-| Registry | **Docker Hub** (`carloszatarin/tvhub-api`, `tvhub-web`) | ECR |
+| Registry | **Docker Hub** (`urielpinag/tvhub-api`, `tvhub-web`) | ECR |
 | Organización | **Monorepo** `/backend` `/frontend` `/infra` | Multi-repo |
 | Observabilidad | **AWS X-Ray/ADOT + CloudWatch** | Prometheus/Grafana |
 

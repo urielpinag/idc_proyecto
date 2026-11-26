@@ -30,7 +30,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: api
-          image: carloszatarin/tvhub-api:sha256-placeholder
+          image: urielpinag/tvhub-api:sha256-placeholder
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
