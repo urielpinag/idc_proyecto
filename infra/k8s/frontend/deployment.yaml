@@ -23,7 +23,7 @@ spec:
         - name: dockerhub
       containers:
         - name: web
-          image: urielpinag/tvhub-web:sha256-placeholder
+          image: piniaops/tvhub-web:sha256-placeholder
           imagePullPolicy: IfNotPresent
           ports:
             - name: http

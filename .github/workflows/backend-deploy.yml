@@ -32,7 +32,7 @@ env:
   AWS_REGION: us-east-1
   EKS_CLUSTER: tvhub-eks
   K8S_NAMESPACE: dev
-  IMAGE: urielpinag/tvhub-api
+  IMAGE: piniaops/tvhub-api
 
 jobs:
   deploy:
