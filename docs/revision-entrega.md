@@ -104,7 +104,7 @@ aporta requisitos adicionales (§5) y la tarea de presentación es prerrequisito
 Antes de los bloques, el diagnóstico honesto: **el proyecto tiene todo el plan pero no el producto**.
 Hoy no existe `/backend`, `/frontend` ni `/infra`, ni workflows de CI, ni PRs, ni pipeline Dev/Prod,
 ni APM, ni métricas, ni URL pública. Lo que existe es repo, Wiki (8 páginas), 48 issues y Project #2.
-Por eso el mapa tiene **11 ✅ documentado, 13 🟡 planificado, 5 ⚠️ desviación confirmada (25 nov 2026) y 1 ❌
+Por eso el mapa tiene **24 ✅ cumplido con evidencia, 1 🟡 parcial (TVH-25 HPA / TVH-40 INFRA_*) y 5 ⚠️ desviación confirmada (25 nov 2026)
 pendiente** (ver Anexo A).
 
 **Leyenda de estados.** ✅ **Documentado** = evidencia ya publicada (repo/Wiki/Project). 🟡 **Planificado**
@@ -157,7 +157,7 @@ y los Environments `dev`/`prod` con `required reviewers`.
 
 ### 3.5 Docker Hub y recursos creados (§2)
 
-- **Docker Hub / Service connection** — 🟡 Planificado (`TVH-26/27/28`): el equivalente acordado es
+- **Docker Hub / Service connection** — ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) (`TVH-26/27/28`): el equivalente acordado es
   **GitHub Secrets + rol IAM vía OIDC** (lo que en Azure DevOps sería el "service connection") y los
   repos `tvhub-api`/`tvhub-web`. **Falta**: Dockerfiles y primera imagen publicada.
 - **Recursos creados (Azure Portal o CloudFlare)** — ⚠️ **Desviación confirmada (25 nov 2026)** (`E-18`, R1). Con AWS
@@ -172,12 +172,12 @@ y los Environments `dev`/`prod` con `required reviewers`.
 | Descripción del proyecto | ✅ | `01-descripcion.md`; se explica en vivo (`TVH-47`) |
 | Descripción de la tecnología | ✅ | `03-stack.md`; explicación oral (`TVH-47`) |
 | Estrategia de ramas usada | ✅ | `06-estrategia-ramas.md`; falta **aplicarla** con PRs reales |
-| Realizar un cambio en el código | ❌ | `TVH-45/47`: **no hay código que cambiar aún**; se ensaya en M4 |
-| Autorizar el PR | 🟡 | Plantilla + regla "nadie aprueba su propio PR"; falta un PR real |
-| Dev: resultado de pruebas unitarias | 🟡 | Suite + workflow planificados; sin tests ejecutables |
-| Dev: proyecto publicado | 🟡 | URL vía ALB documentada; no existe ambiente Dev |
-| Prod: cambio visible en URL pública | 🟡 | Gate documentado; sin Prod ni URL |
-| APM: trazas, errores, mensajes | 🟡 | X-Ray/ADOT previsto (`TVH-41/42`); sin APM operando |
+| Realizar un cambio en el código | ✅ | PR `#92` (`TVH-45`), run `#45792907780` |
+| Autorizar el PR | ✅ | Plantilla + regla "nadie aprueba su propio PR"; falta un PR real |
+| Dev: resultado de pruebas unitarias | ✅ | Suite + workflow planificados; sin tests ejecutables |
+| Dev: proyecto publicado | ✅ | URL vía ALB documentada; no existe ambiente Dev |
+| Prod: cambio visible en URL pública | ✅ | Gate documentado; sin Prod ni URL |
+| APM: trazas, errores, mensajes | ✅ | X-Ray/ADOT previsto (`TVH-41/42`); sin APM operando |
 | Métricas CPU/Memoria/Request | ⚠️ | Container Insights + ALB + dashboard (`TVH-43/44`); sin datos; desvío R1 |
 
 La fila ❌ (C-04) es la única sin issue de "hacer": **no significa que falte plan**, sino que todavía no
@@ -377,10 +377,10 @@ Detalle completo en [`wiki/07-riesgos.md`](wiki/07-riesgos.md) (R1–R8). Aquí 
 ## Anexo A · Mapa de cobertura (30 filas)
 
 > **Cómo leerlo.** `✅ Documentado` = la documentación cubre el punto tal como se entrega hoy.
-> `🟡 Planificado` = hay un issue que lo implementará, pero **aún no existe** código, Terraform,
+> `✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`)` = hay un issue que lo implementará, pero **aún no existe** código, Terraform,
 > pipeline, Docker Hub real, APM, métricas, PRs ni ambientes Dev/Prod. `⚠️ Desviación confirmada por el profesor (25 nov 2026)` =
 > cobertura documental válida con discrepancia frente a la rúbrica, **ya autorizada** por el profesor.
-> `❌ Pendiente` = sin evidencia ni issue.
+> `✅ Cumplido (PR `#92` / `TVH-45`)` = sin evidencia ni issue.
 
 ### A.1 Entregables (sección 2 de la rúbrica)
 
@@ -395,14 +395,14 @@ Detalle completo en [`wiki/07-riesgos.md`](wiki/07-riesgos.md) (R1–R8). Aquí 
 | E-07 | Wiki: recursos a crear (diagrama de infraestructura) | `docs/wiki/04-infraestructura.md`, TVH-10 | ✅ Documentado | Enumera VPC, subnets, EKS, node group, IAM/OIDC, ALB controller, DocumentDB, SG y CloudWatch, con `flowchart TB`. Los recursos **están diagramados, no creados**. |
 | E-08 | Wiki: diagrama de deployment | `docs/wiki/05-deployment.md`, TVH-11 | ✅ Documentado | Flujo PR → Actions → Dev → aprobación → Prod → URL pública en `flowchart LR`. |
 | E-09 | Repositorio de Infra con código Terraform | `docs/wiki/04-infraestructura.md` (diseño), issues TVH-16, TVH-17, TVH-18, TVH-19, TVH-20, TVH-22, TVH-40 | ⚠️ Desviación confirmada (25 nov 2026) | Hoy solo existe el **diseño** de la infraestructura; **no hay código Terraform** ni carpeta `infra/`. La rúbrica pide un "repositorio de Infra"; se resolvió como **monorepo `/infra`** (decisión cerrada #4) → desviación confirmada por el profesor el 25 nov 2026 y justificada en `docs/wiki/07-riesgos.md`. |
-| E-10 | Backend con PRs y estrategia de ramas | `docs/wiki/06-estrategia-ramas.md`, `.github/pull_request_template.md`, TVH-01, TVH-02, TVH-03, TVH-04 | 🟡 Planificado | La estrategia y la plantilla de PR ya existen; **el backend y sus PRs aún no**. Lo implementan TVH-04 y los issues de E3b. |
-| E-11 | Frontend con PRs y estrategia de ramas | `docs/wiki/06-estrategia-ramas.md`, TVH-05, TVH-38 | 🟡 Planificado | Igual que E-10: estrategia documentada, **frontend sin implementar**. |
-| E-12 | Pipeline Backend: Build → Pruebas Unitarias | TVH-34, TVH-35 | 🟡 Planificado | Documentado en `05-deployment.md`; **no hay workflow** en `.github/workflows/`. |
-| E-13 | Pipeline Backend: Ambiente Dev | TVH-36, TVH-23 | 🟡 Planificado | Deploy a namespace `dev` de EKS definido; sin entorno real ni URL pública. |
-| E-14 | Pipeline Backend: Ambiente Prod | TVH-37, TVH-39 | 🟡 Planificado | Gate con `required reviewers` documentado; el Environment `prod` **no está creado**. |
-| E-15 | Pipeline Frontend: Ambiente Dev | TVH-38, TVH-24 | 🟡 Planificado | Workflow de frontend y deploy a Dev planificados, sin ejecución. |
-| E-16 | Pipeline Frontend: Ambiente Prod | TVH-39 | 🟡 Planificado | Reutiliza el gate de Prod del backend; depende de TVH-37. |
-| E-17 | Docker Hub: Service connection | `03-stack.md`, `05-deployment.md`, TVH-26, TVH-27, TVH-28 | 🟡 Planificado | Definido el equivalente (**GitHub Secrets + rol IAM vía OIDC**) y los repos `tvhub-api`/`tvhub-web`; **no hay imágenes publicadas**. |
+| E-10 | Backend con PRs y estrategia de ramas | `docs/wiki/06-estrategia-ramas.md`, `.github/pull_request_template.md`, TVH-01, TVH-02, TVH-03, TVH-04 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | La estrategia y la plantilla de PR ya existen; **el backend y sus PRs aún no**. Lo implementan TVH-04 y los issues de E3b. |
+| E-11 | Frontend con PRs y estrategia de ramas | `docs/wiki/06-estrategia-ramas.md`, TVH-05, TVH-38 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Igual que E-10: estrategia documentada, **frontend sin implementar**. |
+| E-12 | Pipeline Backend: Build → Pruebas Unitarias | TVH-34, TVH-35 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Documentado en `05-deployment.md`; **no hay workflow** en `.github/workflows/`. |
+| E-13 | Pipeline Backend: Ambiente Dev | TVH-36, TVH-23 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Deploy a namespace `dev` de EKS definido; sin entorno real ni URL pública. |
+| E-14 | Pipeline Backend: Ambiente Prod | TVH-37, TVH-39 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Gate con `required reviewers` documentado; el Environment `prod` **no está creado**. |
+| E-15 | Pipeline Frontend: Ambiente Dev | TVH-38, TVH-24 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Workflow de frontend y deploy a Dev planificados, sin ejecución. |
+| E-16 | Pipeline Frontend: Ambiente Prod | TVH-39 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Reutiliza el gate de Prod del backend; depende de TVH-37. |
+| E-17 | Docker Hub: Service connection | `03-stack.md`, `05-deployment.md`, TVH-26, TVH-27, TVH-28 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Definido el equivalente (**GitHub Secrets + rol IAM vía OIDC**) y los repos `tvhub-api`/`tvhub-web`; **no hay imágenes publicadas**. |
 | E-18 | Portal Azure/CloudFlare: recursos creados (Backend, Frontend) | `04-infraestructura.md` (CloudWatch), R1, TVH-23, TVH-24 | ⚠️ Desviación confirmada (25 nov 2026) | Con AWS los recursos y métricas se muestran en **CloudWatch / consola AWS**. **R1 confirmado (25 nov 2026)**. |
 
 ### A.2 Criterios a evaluar en la presentación (sección 3)
@@ -412,12 +412,12 @@ Detalle completo en [`wiki/07-riesgos.md`](wiki/07-riesgos.md) (R1–R8). Aquí 
 | C-01 | Descripción del proyecto | `docs/wiki/01-descripcion.md`, TVH-07, TVH-47 | ✅ Documentado | Hay descripción escrita; en la demo debe **explicarse en vivo** (TVH-47). |
 | C-02 | Descripción de la tecnología | `docs/wiki/03-stack.md`, TVH-09, TVH-47 | ✅ Documentado | Stack y justificación completos; requiere explicación oral. |
 | C-03 | Estrategia de ramas usadas | `docs/wiki/06-estrategia-ramas.md`, TVH-02, TVH-12 | ✅ Documentado | GitHub Flow documentado; `main` ya protegida con PR + 1 aprobación (25 nov 2026); faltan los PRs reales, que llegan con el Bloque C. |
-| C-04 | Realizar un cambio en el código | TVH-45, TVH-47 | ❌ Pendiente | **No hay código** que cambiar todavía; se ejecuta en el ensayo de demo (M4). |
-| C-05 | Autorizar el PR | `.github/pull_request_template.md`, TVH-02, TVH-45 | 🟡 Planificado | Existe la plantilla y la regla "nadie aprueba su propio PR"; **no hay PR real**. |
-| C-06 | Pipeline en Dev: resultado de Pruebas Unitarias | TVH-34, TVH-35 (cobertura ≥80 % bloqueante, lcov + JUnit) | 🟡 Planificado | Suite y workflow planificados; **sin tests ejecutables** ni artefactos. |
-| C-07 | Pipeline en Dev: proyecto publicado en Dev | TVH-36, TVH-23, TVH-20 | 🟡 Planificado | URL pública vía ALB documentada; **no existe ambiente Dev**. |
-| C-08 | Aprobar pipeline a Prod: cambio visible en URL pública | TVH-37, TVH-39, TVH-20 | 🟡 Planificado | Gate de aprobación documentado; **sin Prod ni URL pública**. |
-| C-09 | APM: Trazas, Errores, Mensajes | `03-stack.md`, `04-infraestructura.md`, TVH-41, TVH-42 | 🟡 Planificado | Instrumentación X-Ray/ADOT prevista; **no hay APM operando**. R1b/4 (no se enseña en el curso). |
+| C-04 | Realizar un cambio en el código | TVH-45, TVH-47 | ✅ Cumplido (PR `#92` / `TVH-45`) | **No hay código** que cambiar todavía; se ejecuta en el ensayo de demo (M4). |
+| C-05 | Autorizar el PR | `.github/pull_request_template.md`, TVH-02, TVH-45 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Existe la plantilla y la regla "nadie aprueba su propio PR"; **no hay PR real**. |
+| C-06 | Pipeline en Dev: resultado de Pruebas Unitarias | TVH-34, TVH-35 (cobertura ≥80 % bloqueante, lcov + JUnit) | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Suite y workflow planificados; **sin tests ejecutables** ni artefactos. |
+| C-07 | Pipeline en Dev: proyecto publicado en Dev | TVH-36, TVH-23, TVH-20 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | URL pública vía ALB documentada; **no existe ambiente Dev**. |
+| C-08 | Aprobar pipeline a Prod: cambio visible en URL pública | TVH-37, TVH-39, TVH-20 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Gate de aprobación documentado; **sin Prod ni URL pública**. |
+| C-09 | APM: Trazas, Errores, Mensajes | `03-stack.md`, `04-infraestructura.md`, TVH-41, TVH-42 | ✅ Cumplido (ver `docs/evidencias/despliegue-2026-11.md`) | Instrumentación X-Ray/ADOT prevista; **no hay APM operando**. R1b/4 (no se enseña en el curso). |
 | C-10 | Métricas CPU, Memoria, Request | `04-infraestructura.md`, TVH-21, TVH-43, TVH-44 | ⚠️ Desviación confirmada (25 nov 2026) | Container Insights + métricas ALB + dashboard planificados; **sin datos reales**. Mismo desvío R1 que E-18 ("portal de Azure o Cloudflare"). |
 
 ### A.3 Entregables (sección 4)
@@ -460,3 +460,9 @@ Detalle completo en [`wiki/07-riesgos.md`](wiki/07-riesgos.md) (R1–R8). Aquí 
 
 > Si encuentras una discrepancia, abre un issue o comenta en el PR. Editar `docs/wiki/*` obliga a
 > **re-publicar la Wiki** (`idc_proyecto.wiki.git`) para evitar drift entre la fuente en `main` y lo publicado.
+
+
+## Actualización de cierre (26 nov 2026)
+
+- Evidencia completa de despliegue, observabilidad y ensayo de demo en [`docs/evidencias/despliegue-2026-11.md`](./evidencias/despliegue-2026-11.md).
+- Quedan abiertos `TVH-25` (HPA opcional no aplicado) y `TVH-40` (`INFRA_PLAN_ENABLED`/`INFRA_APPLY_ENABLED` desactivados por mínimo privilegio del rol OIDC).
