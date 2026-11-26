@@ -5,8 +5,7 @@ Documenta la arquitectura, la infraestructura y el proceso de entrega de **TV Hu
 IPTV que se despliega en **AWS** con contenedores en **Amazon EKS** y base de datos **Amazon DocumentDB**,
 usando un **monorepo** en **GitHub** con CI/CD en **GitHub Actions**.
 
-> Estado: documentación de planificación. El código de aplicación (`/backend`, `/frontend`) y el código de
-> El código (`/backend`, `/frontend`), Terraform (`/infra`) y los workflows de CI/CD ya están implementados en `main`.
+> **Estado:** El código (`/backend`, `/frontend`), Terraform (`/infra`) y los workflows de CI/CD ya están implementados en `main`.
 
 ## Índice
 

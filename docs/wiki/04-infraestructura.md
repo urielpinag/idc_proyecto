@@ -20,7 +20,7 @@ Este documento enumera **qué recursos se van a crear** y cómo se relacionan.
 - **Node group gestionado** (EC2, por ejemplo `t3.medium`) en subnets privadas, con `min/desired/max`
   configurables.
 - **Rol IAM del cluster** y **rol IAM de los nodos** con las políticas mínimas.
-- **IAM OIDC provider** del cluster (para roles IRSA de service accounts y para el *service account* del
+- **IAM OIDC provider** del cluster y **EKS Pod Identity** (usado por EBS CSI y AWS Load Balancer Controller).
   AWS Load Balancer Controller).
 - **Addons**: `aws-ebs-csi-driver`, `coredns`, `kube-proxy`, `vpc-cni`; **metrics-server** instalado (HPA 2→5 pendiente en `TVH-25`).
 - **AWS Load Balancer Controller** (Pod Identity) que crea el **ALB** directamente a partir del **Ingress** (`ingressClassName: alb`).
