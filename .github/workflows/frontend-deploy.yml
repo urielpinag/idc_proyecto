@@ -25,7 +25,7 @@ env:
   AWS_REGION: us-east-1
   CLUSTER_NAME: tvhub-cluster
   NAMESPACE: dev
-  IMAGE_NAME: carloszatarin/tvhub-web
+  IMAGE_NAME: urielpinag/tvhub-web
 
 jobs:
   test:
