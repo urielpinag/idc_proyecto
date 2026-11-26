@@ -44,7 +44,7 @@ resource "aws_vpc_security_group_egress_rule" "all" {
 resource "aws_docdb_cluster" "this" {
   cluster_identifier      = "${local.name}-docdb"
   engine                  = "docdb"
-  engine_version          = "4.0.0"
+  engine_version          = "5.0.0"
   master_username         = var.master_username
   master_password         = var.master_password
   db_subnet_group_name    = aws_docdb_subnet_group.this.name
