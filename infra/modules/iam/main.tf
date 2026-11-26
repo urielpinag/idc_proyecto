@@ -116,3 +116,25 @@ resource "aws_eks_access_policy_association" "deploy_admin" {
 
   depends_on = [aws_eks_access_entry.deploy]
 }
+
+resource "aws_eks_access_entry" "operator" {
+  count         = strcontains(data.aws_caller_identity.current.arn, ":user/") ? 1 : 0
+  cluster_name  = var.cluster_name
+  principal_arn = data.aws_caller_identity.current.arn
+  type          = "STANDARD"
+
+  tags = local.tags
+}
+
+resource "aws_eks_access_policy_association" "operator_admin" {
+  count         = length(aws_eks_access_entry.operator)
+  cluster_name  = var.cluster_name
+  principal_arn = aws_eks_access_entry.operator[0].principal_arn
+  policy_arn    = "arn:${data.aws_partition.current.partition}:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [aws_eks_access_entry.operator]
+}
