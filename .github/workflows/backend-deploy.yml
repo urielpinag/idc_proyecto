@@ -24,10 +24,6 @@ permissions:
   contents: read
   id-token: write
 
-concurrency:
-  group: tvhub-dev
-  cancel-in-progress: false
-
 env:
   AWS_REGION: us-east-1
   EKS_CLUSTER: tvhub-eks
@@ -38,6 +34,9 @@ jobs:
   deploy:
     name: deploy-dev
     runs-on: ubuntu-latest
+    concurrency:
+      group: tvhub-dev
+      cancel-in-progress: false
     # Gate doble: el CI debe haber concluido con éxito y el despliegue debe
     # estar habilitado por variable de repositorio.
     if: >-
