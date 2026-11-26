@@ -49,6 +49,8 @@ resource "aws_eks_node_group" "this" {
     aws_iam_role_policy_attachment.node_worker,
     aws_iam_role_policy_attachment.node_cni,
     aws_iam_role_policy_attachment.node_ecr,
+    aws_iam_role_policy_attachment.node_cloudwatch,
+    aws_iam_role_policy_attachment.node_xray,
   ]
 }
 

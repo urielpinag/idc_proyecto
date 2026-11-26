@@ -30,7 +30,7 @@ concurrency:
 
 env:
   AWS_REGION: us-east-1
-  EKS_CLUSTER: tvhub-cluster
+  EKS_CLUSTER: tvhub-eks
   K8S_NAMESPACE: dev
   IMAGE: carloszatarin/tvhub-api
 

@@ -56,6 +56,16 @@ resource "aws_iam_role_policy_attachment" "node_ecr" {
   policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+resource "aws_iam_role_policy_attachment" "node_cloudwatch" {
+  role       = aws_iam_role.node.name
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "node_xray" {
+  role       = aws_iam_role.node.name
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSXrayWriteOnlyAccess"
+}
+
 # --- Rol del driver EBS CSI --------------------------------------------------
 
 resource "aws_iam_role" "ebs_csi" {
