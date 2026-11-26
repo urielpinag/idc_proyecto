@@ -52,6 +52,8 @@ spec:
                 secretKeyRef:
                   name: tvhub-secrets
                   key: JWT_REFRESH_SECRET
+            - name: COOKIE_SECURE
+              value: "false"
             - name: OTEL_TRACING_ENABLED
               value: "true"
             - name: OTEL_EXPORTER_OTLP_ENDPOINT

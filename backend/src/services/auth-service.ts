@@ -335,7 +335,7 @@ export type CookieOptions = {
 };
 
 export function buildRefreshCookieOptions(nodeEnv: string, maxAgeMs?: number): CookieOptions {
-  const secure = nodeEnv === 'production';
+  const secure = nodeEnv === 'production' && process.env.COOKIE_SECURE !== 'false';
   const options: CookieOptions = {
     httpOnly: true,
     sameSite: 'strict',

@@ -3,9 +3,6 @@ name: Backend CI
 on:
   workflow_dispatch:
   pull_request:
-    paths:
-      - 'backend/**'
-      - '.github/workflows/backend-ci.yml'
   push:
     branches:
       - main
@@ -34,6 +31,8 @@ jobs:
           cache-dependency-path: backend/package-lock.json
       - name: Instalar dependencias
         run: npm ci
+      - name: Lint
+        run: npm run lint
       - name: Compilar
         run: npm run build
       - name: Pruebas con cobertura
