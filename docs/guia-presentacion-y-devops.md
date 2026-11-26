@@ -52,6 +52,11 @@ El proyecto sigue **GitHub Flow** sobre el monorepo `urielpinag/idc_proyecto` (`
 
 ---
 
+
+### Issues que quedan abiertos (fuera de alcance / decisión de seguridad)
+- **`TVH-25` (HPA 2→5):** `metrics-server` está instalado en EKS, pero el manifiesto `HorizontalPodAutoscaler` y la prueba de carga quedan como mejora opcional.
+- **`TVH-40` (`terraform plan/apply` en CI):** `terraform.yml` valida formato y sintaxis (`fmt` + `validate`) en cada PR; `INFRA_PLAN_ENABLED` e `INFRA_APPLY_ENABLED` se mantienen desactivados por principio de mínimo privilegio (el rol OIDC `tvhub-ci-deploy` solo tiene permisos para desplegar en EKS).
+
 ## 3. Cómo Volver a Levantar el Proyecto (y Apagarlo Después)
 
 > **Tiempo estimado:** ~35–40 min antes de la exposición. El bucket S3 y la tabla DynamoDB del bootstrap ya existen y no cobran por hora.
