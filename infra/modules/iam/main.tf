@@ -69,6 +69,8 @@ resource "aws_iam_role" "deploy" {
           "${local.github_issuer}:sub" = [
             "repo:${var.github_repo}:environment:dev",
             "repo:${var.github_repo}:environment:prod",
+            "repo:urielpinag@153466489/idc_proyecto@1468217124:environment:dev",
+            "repo:urielpinag@153466489/idc_proyecto@1468217124:environment:prod",
           ]
         }
       }
