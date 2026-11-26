@@ -42,17 +42,18 @@ resource "aws_vpc_security_group_egress_rule" "all" {
 }
 
 resource "aws_docdb_cluster" "this" {
-  cluster_identifier      = "${local.name}-docdb"
-  engine                  = "docdb"
-  engine_version          = "5.0.0"
-  master_username         = var.master_username
-  master_password         = var.master_password
-  db_subnet_group_name    = aws_docdb_subnet_group.this.name
-  vpc_security_group_ids  = [aws_security_group.this.id]
-  backup_retention_period = var.backup_retention_period
-  skip_final_snapshot     = true
-  deletion_protection     = false
-  apply_immediately       = true
+  cluster_identifier          = "${local.name}-docdb"
+  engine                      = "docdb"
+  engine_version              = "5.0.0"
+  allow_major_version_upgrade = true
+  master_username             = var.master_username
+  master_password             = var.master_password
+  db_subnet_group_name        = aws_docdb_subnet_group.this.name
+  vpc_security_group_ids      = [aws_security_group.this.id]
+  backup_retention_period     = var.backup_retention_period
+  skip_final_snapshot         = true
+  deletion_protection         = false
+  apply_immediately           = true
 
   tags = local.tags
 }
