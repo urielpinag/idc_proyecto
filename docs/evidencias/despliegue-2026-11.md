@@ -35,7 +35,7 @@ Registro verificado en la cuenta AWS `124125038724` (`us-east-1`), Docker Hub (`
 - **Métricas**: `ContainerInsights` (`node_cpu_utilization`, `node_memory_utilization`) y `AWS/ApplicationELB` (`RequestCount`) activos para ambos ALBs.
 - **Alarma y Dashboard**: `tvhub-dev-errors` (`OK`) y dashboard `tvhub-dev` creados con expresiones `SEARCH(...)`.
 
-## 5. Distribución de Actividades (Simulación 2 Personas: 24 / 24)
+## 5. Distribución de Actividades (24 / 24 issues asignados)
 
-- **Persona A (`ur` / `urielpinag`) — 24 issues**: scaffold monorepo/backend, modelos Mongoose (`TVH-29`), auth JWT (`TVH-30`), CRUD canales (`TVH-31`), usuarios/favoritos/historial (`TVH-33`), CI backend (`TVH-35`), deploy backend Dev/Prod (`TVH-23`, `TVH-36`, `TVH-37`), Terraform VPC/EKS/DocDB/CloudWatch/IaC (`TVH-16`, `TVH-17`, `TVH-21`, `TVH-22`), OTel X-Ray (`TVH-41`), dashboard (`TVH-44`), ensayo demo (`TVH-45`) y presentación final (`TVH-47`).
-- **Persona B (`Carlos Z` / `Zataaaa`) — 24 issues**: scaffold frontend (`TVH-05`), Wiki (`TVH-07`, `TVH-09`, `TVH-11`, `TVH-13`), Docker Hub (`TVH-26`, `TVH-28`), importación M3U (`TVH-32`), suite de pruebas ≥ 80 % (`TVH-34`), deploy frontend Dev/Prod (`TVH-24`, `TVH-38`, `TVH-39`), Terraform IAM/OIDC, DocDB, ALB Controller, workflow Terraform (`TVH-18`, `TVH-19`, `TVH-20`, `TVH-40`), alarmas (`TVH-42`), Container Insights (`TVH-43`), costos (`TVH-48`) y reporte final (`TVH-46`).
+- **Persona A (`ur` / `urielpinag`) — 24 issues asignados**: `TVH-01`, `TVH-04`, `TVH-06`, `TVH-08`, `TVH-10`, `TVH-12`, `TVH-14`, `TVH-16`, `TVH-17`, `TVH-20`, `TVH-22`, `TVH-23`, `TVH-25`, `TVH-27`, `TVH-29`, `TVH-31`, `TVH-33`, `TVH-35`, `TVH-37`, `TVH-39`, `TVH-41`, `TVH-44`, `TVH-45`, `TVH-47`.
+- **Persona B (`Carlos Z` / `Zataaaa`) — 24 issues asignados**: `TVH-02`, `TVH-03`, `TVH-05`, `TVH-07`, `TVH-09`, `TVH-11`, `TVH-13`, `TVH-15`, `TVH-18`, `TVH-19`, `TVH-21`, `TVH-24`, `TVH-26`, `TVH-28`, `TVH-30`, `TVH-32`, `TVH-34`, `TVH-36`, `TVH-38`, `TVH-40`, `TVH-42`, `TVH-43`, `TVH-46`, `TVH-48`.
