@@ -43,6 +43,10 @@ COPY --chown=node:node package.json ./
 COPY --chown=node:node --from=build /app/node_modules ./node_modules
 COPY --chown=node:node --from=build /app/dist ./dist
 
+RUN mkdir -p /app/certs \
+ && wget -q -O /app/certs/global-bundle.pem https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem \
+ && chmod 0444 /app/certs/global-bundle.pem
+
 USER node
 
 EXPOSE 3000
