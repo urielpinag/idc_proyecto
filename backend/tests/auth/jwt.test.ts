@@ -77,7 +77,7 @@ describe('services/auth-service (helpers)', () => {
     });
 
     const prod = buildRefreshCookieOptions('production', 1000);
-    expect(prod.secure).toBe(false);
+    expect(prod.secure).toBe(true);
     expect(prod.maxAge).toBe(1000);
   });
 });
