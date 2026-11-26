@@ -41,5 +41,5 @@ resource "helm_release" "aws_load_balancer_controller" {
     value = "aws-load-balancer-controller"
   }
 
-  depends_on = [module.lbc]
+  depends_on = [module.lbc, module.iam]
 }
